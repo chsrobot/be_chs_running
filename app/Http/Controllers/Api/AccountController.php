@@ -19,7 +19,7 @@ class AccountController extends Controller
     public function test()
     {
         $content = ([
-            'message' => 'Test Prod Again',
+            'message' => 'Test Prod Again !!',
         ]);
         return response($content,201)
             ->header('Token',Hash::make('secret'))
