@@ -21,4 +21,4 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-          script: "cd /home/adminreg/runner_prod/backend && sh ./.scripts/deploy.sh"
+          script: "cd /home/adminreg/runner_prod/backend && git pull origin main"
