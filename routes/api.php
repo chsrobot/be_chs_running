@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\AccountController;
 |
 */
 Route::post('/signup', [AccountController::class, 'signup']);
+Route::get('/signup', [AccountController::class, 'test']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

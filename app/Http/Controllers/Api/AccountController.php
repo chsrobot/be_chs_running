@@ -16,6 +16,17 @@ class AccountController extends Controller
     {
         //
     }
+    public function test()
+    {
+        $content = ([
+            'message' => 'Test Prod',
+        ]);
+        return response($content,201)
+            ->header('Token',Hash::make('secret'))
+            ->header('Content-Type', 'application/json')
+            ->header( 'Access-Control-Allow-Origin', '*' )
+            ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
+    }
     public function signup(Request $request)
     {
         if (Account::where('name', request()->name )->exists()) {
