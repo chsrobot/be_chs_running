@@ -1,9 +1,9 @@
-name: 🚀 Deploy on push master
+name: 🚀 Deploy on push main
 
 on: 
   push:
     branches:    
-      - master 
+      - main 
     
 jobs:
   web-deploy:
