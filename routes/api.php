@@ -15,10 +15,10 @@ use App\Http\Controllers\Api\InformationController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::post('/signup', [AccountController::class, 'signup']);
-Route::post('/signin', [AccountController::class, 'signin']);
-Route::post('/information', [InformationController::class, 'insertOrUpdateInformation']);
-Route::post('/getinfo', [InformationController::class, 'getInformationByEmail']);
+Route::post('/auth/signup', [AccountController::class, 'signup']);
+Route::post('/auth/signin', [AccountController::class, 'signin']);
+Route::post('/info/set', [InformationController::class, 'insertOrUpdateInformation']);
+Route::get('/info/get', [InformationController::class, 'getInformationByEmail']);
 
 
 
