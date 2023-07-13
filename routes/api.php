@@ -17,8 +17,8 @@ use App\Http\Controllers\Api\InformationController;
 */
 Route::post('/auth/signup', [AccountController::class, 'signup']);
 Route::post('/auth/signin', [AccountController::class, 'signin']);
-Route::post('/info/set', [InformationController::class, 'insertOrUpdateInformation']);
-Route::get('/info/get', [InformationController::class, 'getInformationByEmail']);
+Route::post('/info', [InformationController::class, 'insertOrUpdateInformation']);
+Route::get('/info', [InformationController::class, 'getInformationByEmail']);
 
 
 

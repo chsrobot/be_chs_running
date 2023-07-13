@@ -85,9 +85,7 @@ class AccountController extends Controller
                     ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
             } else {
                 $content = [
-                    'message' => 'Invalid Credentials',
-                    'user' => $email,
-                    'password' => $inputPassword,
+                    'message' => 'Invalid Credentials'
                 ];
                 return response($content, 401)
                     ->header('Token', Hash::make('secret'))
@@ -99,7 +97,7 @@ class AccountController extends Controller
             $content = [
                 'message' => 'User Not Found',
             ];
-            return response($content, 401)
+            return response($content, 404)
                 //->header('Token',Hash::make('secret'))
                 ->header('Content-Type', 'application/json')
                 ->header('Access-Control-Allow-Origin', '*')
