@@ -27,9 +27,11 @@ class AccountController extends Controller
             ->header( 'Access-Control-Allow-Origin', '*' )
             ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
     }
+
+
     public function signup(Request $request)
     {
-        if (Account::where('name', request()->name )->exists()) {
+        if (Account::where('email', request()->email )->exists()) {
             $content = ([
                 'message' => 'Conflict',
             ]);
@@ -56,21 +58,52 @@ class AccountController extends Controller
             ->header( 'Access-Control-Allow-Origin', '*' )
             ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
     }
-    // public function store(Request $request)
-    // {
-    //     $validatedData = $request->validate([
-    //         'name' => 'required',
-    //         'lastname' => 'required',
-    //         'email' => 'required|email|unique:signup_accounts',
-    //         'password' => 'required|min:6',
-    //     ]);
 
-    //     $validatedData['password'] = Hash::make($validatedData['password']);
+    public function signin(Request $request)
+    {
+        $account = Account::where('email', request()->email);
+        if ($account->exists()) {
+            $user = Account::where('email', request()->email)->first();
+            $inputPassword = request()->password;
+            if($user && Hash::check($inputPassword , $user->password)){
+                $content = ([
+                    'message' => 'OK',
+                    'name' => $user->name,
+                    'lastname' => $user->lastname,
+                    'email' => $user->email
+                ]);
+                return response($content,200)
+                    ->header('Token','test')
+                    ->header('Content-Type', 'application/json')
+                    ->header( 'Access-Control-Allow-Origin', '*' )
+                    ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
+            }
+            else{
+                $content = ([
+                    'message' => 'Invalid Credentials',
+                    'user' => request()->email,
+                    'password' => request()->password,
+                ]);
+                return response($content,401)
+                    ->header('Token',Hash::make('secret'))
+                    ->header('Content-Type', 'application/json')
+                    ->header( 'Access-Control-Allow-Origin', '*' )
+                    ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
 
-    //     $signupAccount = Account::create($validatedData);
+            }
+        }
+        else {
+            $content = ([
+                'message' => 'User Not Found',
+            ]);
+            return response($content,401)
+                //->header('Token',Hash::make('secret'))
+                ->header('Content-Type', 'application/json')
+                ->header( 'Access-Control-Allow-Origin', '*' )
+                ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
 
-    //     return response()->json(['message' => 'Account created successfully', 'data' => "Hello"], 201);
-    // }
+        }
+    }
 
     
     /**
