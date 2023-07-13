@@ -25,6 +25,9 @@ return new class extends Migration
             $table->string('relationship');
             $table->string('bloodtype');
             $table->string('email')->unique();
+            
+            $table->string('bib_number')->nullable();
+
             $table->timestamps();
         });
     }

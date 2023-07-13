@@ -28,22 +28,27 @@ class AccountController extends Controller
             ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
     }
 
+
     public function signup(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string',
-            'lastname' => 'required|string',
-            'email' => 'required|email|unique:accounts,email',
-            'password' => 'required|string|min:8'
-        ]);
-    
-        $account = Account::create([
-            'name' => $validatedData['name'],
-            'lastname' => $validatedData['lastname'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password'])
-        ]);
-    
+        if (Account::where('email', request()->email )->exists()) {
+            $content = ([
+                'message' => 'Conflict',
+            ]);
+            return response($content,409)
+                ->header('Token',Hash::make('secret'))
+                ->header('Content-Type', 'application/json')
+                ->header( 'Access-Control-Allow-Origin', '*' )
+                ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
+        }
+
+        $data = request()->all();
+        $data['name'] = request()->name;
+        $data['lastname'] = request()->lastname;
+        $data['email'] = request()->email;
+        $data['password'] = Hash::make(request()->password);
+        Account::create($data);
+
         $content = ([
             'message' => 'Created',
         ]);
@@ -53,40 +58,51 @@ class AccountController extends Controller
             ->header( 'Access-Control-Allow-Origin', '*' )
             ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
     }
-    
+
     public function signin(Request $request)
     {
-        $validatedData = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string'
-        ]);
-    
-        $account = Account::where('email', $validatedData['email'])->first();
-    
-        if (!$account || !Hash::check($validatedData['password'], $account->password)) {
+        $account = Account::where('email', request()->email);
+        if ($account->exists()) {
+            $user = Account::where('email', request()->email)->first();
+            $inputPassword = request()->password;
+            if($user && Hash::check($inputPassword , $user->password)){
+                $content = ([
+                    'message' => 'Success',
+                    'name' => $user->name,
+                    'lastname' => $user->lastname,
+                    'email' => $user->email
+                ]);
+                return response($content,200)
+                    ->header('Token','test')
+                    ->header('Content-Type', 'application/json')
+                    ->header( 'Access-Control-Allow-Origin', '*' )
+                    ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
+            }
+            else{
+                $content = ([
+                    'message' => 'Invalid Credentials',
+                    'user' => request()->email,
+                    'password' => request()->password,
+                ]);
+                return response($content,401)
+                    ->header('Token',Hash::make('secret'))
+                    ->header('Content-Type', 'application/json')
+                    ->header( 'Access-Control-Allow-Origin', '*' )
+                    ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
+
+            }
+        }
+        else {
             $content = ([
-                'message' => 'Invalid Credentials',
-                'user' => $validatedData['email'],
-                'password' => $validatedData['password'],
+                'message' => 'User Not Found',
             ]);
             return response($content,401)
-                ->header('Token',Hash::make('secret'))
+                //->header('Token',Hash::make('secret'))
                 ->header('Content-Type', 'application/json')
                 ->header( 'Access-Control-Allow-Origin', '*' )
                 ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
+
         }
-    
-        $content = ([
-            'message' => 'Success',
-            'name' => $account->name,
-            'lastname' => $account->lastname,
-            'email' => $account->email
-        ]);
-        return response($content,200)
-            ->header('Token','test')
-            ->header('Content-Type', 'application/json')
-            ->header( 'Access-Control-Allow-Origin', '*' )
-            ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
     }
 
     

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Account;
+use App\Models\Information;
+use Illuminate\Support\Facades\Hash;
 
 class InformationController extends Controller
 {
@@ -32,7 +35,13 @@ class InformationController extends Controller
             ->header('Access-Control-Allow-Origin', '*')
             ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
     }
-    
+
+    public function getInformationByEmail(Request $request)
+    {
+        $information = Information::where('email', request()->email)->first();
+        return $information;
+    }
+
     public function index()
     {
         //
