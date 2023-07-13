@@ -67,7 +67,7 @@ class AccountController extends Controller
             $inputPassword = request()->password;
             if($user && Hash::check($inputPassword , $user->password)){
                 $content = ([
-                    'message' => 'OK',
+                    'message' => 'Success',
                     'name' => $user->name,
                     'lastname' => $user->lastname,
                     'email' => $user->email
