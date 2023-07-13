@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AccountController;
+use App\Http\Controllers\Api\InformationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +17,8 @@ use App\Http\Controllers\Api\AccountController;
 */
 Route::post('/signup', [AccountController::class, 'signup']);
 Route::post('/signin', [AccountController::class, 'signin']);
+
+
 
 Route::get('/signup', [AccountController::class, 'test']);
 
