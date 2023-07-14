@@ -12,36 +12,58 @@ class InformationController extends Controller
 {
     public function insertOrUpdateInformation(Request $request)
     {
-        $data = $request->all();
-        $email = $data['email'];
-        $information = Information::where('email', $email)->first();
+        try {
+            $data = $request->all();
+            $email = $data['email'];
+            $information = Information::where('email', $email)->first();
     
-        if (!$information) {
-            Information::create($data);
-            $message = 'Created';
-            $status = 201;
-        } else {
-            $information->update($data);
-            $message = 'Updated';
-            $status = 200;
+            if (!$information) {
+                Information::create($data);
+                $message = 'Created';
+                $status = 201;
+            } else {
+                $information->update($data);
+                $message = 'Updated';
+                $status = 200;
+            }
+    
+            $content = [
+                'message' => $message,
+            ];
+            return response($content, $status)
+                ->header('Token', Hash::make('secret'))
+                ->header('Content-Type', 'application/json')
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+        } catch (\Exception $e) {
+            $content = [
+                'message' => 'An error occurred.',
+                'error' => $e->getMessage(),
+            ];
+            return response($content, 500)
+                ->header('Content-Type', 'application/json')
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
         }
-    
-        $content = ([
-            'message' => $message,
-        ]);
-        return response($content, $status)
-            ->header('Token', Hash::make('secret'))
-            ->header('Content-Type', 'application/json')
-            ->header('Access-Control-Allow-Origin', '*')
-            ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
     }
-
+    
     public function getInformationByEmail(Request $request)
     {
-        $information = Information::where('email', request()->email)->first();
-        return $information;
+        try {
+            $information = Information::where('email', $request->email)->first();
+            return $information;
+        } catch (\Exception $e) {
+            $content = [
+                'message' => 'An error occurred.',
+                'error' => $e->getMessage(),
+            ];
+            return response($content, 500)
+                ->header('Content-Type', 'application/json')
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+        }
     }
-
+    
     public function index()
     {
         //
