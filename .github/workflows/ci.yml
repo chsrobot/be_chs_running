@@ -1,10 +1,10 @@
 name: 🚀 Deploy on push main
 
-on: 
+on:
   push:
-    branches:    
-      - main 
-    
+    branches:
+      - main
+
 jobs:
   web-deploy:
     name: 🎉 Deploy
@@ -14,11 +14,6 @@ jobs:
       - name: 🚚 Get latest code
         uses: actions/checkout@v2
 
-      - name: 📂 Deploy to server via ssh
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
-          script: "cd /home/adminreg/runner_prod/be_chs_running && git fetch && git pull origin main"
+      - name: 📂 Deploy to server via SSH
+        run: |
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.PORT }} ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd /home/adminreg/runner_prod/be_chs_running && git fetch && git pull origin main"
