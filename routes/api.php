@@ -22,7 +22,10 @@ Route::post('/info', [InformationController::class, 'insertOrUpdateInformation']
 Route::get('/info', [InformationController::class, 'getInformationByEmail']);
 
 
+Route::get('/payment', [PaymentController::class, 'index']);
+Route::post('/payment', [PaymentController::class, 'store']);
 
+//Route::apiResource('/payment', [PaymentController::class]);
 
 
 Route::get('/signup', [AccountController::class, 'test']);
@@ -31,4 +34,3 @@ Route::get('/signup', [AccountController::class, 'test']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::apiResource('/payment', [PaymentController::class]);
