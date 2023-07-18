@@ -25,7 +25,7 @@ Route::get('/info', [InformationController::class, 'getInformationByEmail']);
 //Route::get('/payment', [PaymentController::class, 'index']);
 //Route::post('/payment', [PaymentController::class, 'store']);
 
-Route::apiResource('/payment', [PaymentController::class]);
+Route::apiResource('/payment', PaymentController::class);
 
 
 Route::get('/signup', [AccountController::class, 'test']);
