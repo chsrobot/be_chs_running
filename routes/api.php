@@ -31,4 +31,4 @@ Route::get('/signup', [AccountController::class, 'test']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::apiResource('/payment', PaymentController::class);
+Route::apiResource('/payment', [PaymentController::class]);
