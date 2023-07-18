@@ -1,4 +1,4 @@
-name: 🚀 Deploy on push main
+name: Deploy Backend on Server
 
 on: 
   push:
@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 🚚 Get latest code
+      - name: Get latest code
         uses: actions/checkout@v2
 
-      - name: 📂 Deploy to server via ssh
+      - name: Deploy to server via ssh
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.HOST }}

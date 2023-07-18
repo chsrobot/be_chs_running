@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AccountController;
+use App\Http\Controllers\Api\InformationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +15,14 @@ use App\Http\Controllers\Api\AccountController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::post('/signup', [AccountController::class, 'signup']);
-Route::post('/signin', [AccountController::class, 'signin']);
+Route::post('/auth/signup', [AccountController::class, 'signup']);
+Route::post('/auth/signin', [AccountController::class, 'signin']);
+Route::post('/info', [InformationController::class, 'insertOrUpdateInformation']);
+Route::get('/info', [InformationController::class, 'getInformationByEmail']);
+
+
+
+
 
 Route::get('/signup', [AccountController::class, 'test']);
 

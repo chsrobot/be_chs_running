@@ -24,7 +24,10 @@ return new class extends Migration
             $table->string('emergencontact');
             $table->string('relationship');
             $table->string('bloodtype');
-            $table->string('email');
+            $table->string('email')->unique();
+            
+            $table->string('bib_number')->nullable();
+
             $table->timestamps();
         });
     }
