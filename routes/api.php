@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\InformationController;
-use App\Http\Controllers\API\PaymentController;
+use App\Http\Controllers\Api\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,10 +22,10 @@ Route::post('/info', [InformationController::class, 'insertOrUpdateInformation']
 Route::get('/info', [InformationController::class, 'getInformationByEmail']);
 
 
-Route::get('/payment', [PaymentController::class, 'index']);
-Route::post('/payment', [PaymentController::class, 'store']);
+//Route::get('/payment', [PaymentController::class, 'index']);
+//Route::post('/payment', [PaymentController::class, 'store']);
 
-//Route::apiResource('/payment', [PaymentController::class]);
+Route::apiResource('/payment', [PaymentController::class]);
 
 
 Route::get('/signup', [AccountController::class, 'test']);
