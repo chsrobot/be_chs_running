@@ -160,5 +160,3 @@ Status Code 404
   "message": "User Not Found",
 }
 ``` 
-
-### /payment
