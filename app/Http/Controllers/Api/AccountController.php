@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Account;
 use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
 class AccountController extends Controller
 {
@@ -18,10 +19,13 @@ class AccountController extends Controller
     }
     public function test()
     {
-        $content = ([
-            'message' => 'Test Prod Again !!',
-        ]);
-        return response($content,201)
+        $tokenData = [
+            'email' => "Test",
+            'expires_at' => Carbon::now()->addMinutes(30)->toDateTimeString(),
+            'expired' => Carbon::now()->addMinutes(-10)->isPast(),
+            
+        ];
+        return response($tokenData,201)
             ->header('Token',Hash::make('secret'))
             ->header('Content-Type', 'application/json')
             ->header( 'Access-Control-Allow-Origin', '*' )
@@ -33,13 +37,14 @@ class AccountController extends Controller
     {
         try {
             $email = $request->input('email');
+
+
     
             if (Account::where('email', $email)->exists()) {
                 $content = [
                     'message' => 'Conflict',
                 ];
                 return response($content, 409)
-                    ->header('Token', Hash::make('secret'))
                     ->header('Content-Type', 'application/json')
                     ->header('Access-Control-Allow-Origin', '*')
                     ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
@@ -77,24 +82,38 @@ class AccountController extends Controller
         try {
             $email = $request->input('email');
             $account = Account::where('email', $email);
-            $token = Hash::make($request->input('email'));
+            
     
             if ($account->exists()) {
                 $user = $account->first();
                 $inputPassword = $request->input('password');
     
                 if ($user && Hash::check($inputPassword, $user->password)) {
+
+                    $expiresAt = Carbon::now()->addMinutes(30)->toDateTimeString();
+
+                    $tokenData = [
+                        'email' => $email,
+                        'salt' => "H7AdNZtPtduXWaPp",
+                        'expires_at' => $expiresAt,
+                    ];
+                    $token = 'Bearer ' . Hash::make(json_encode($tokenData));
+
                     $content = [
                         'message' => 'Success',
                         'name' => $user->name,
                         'lastname' => $user->lastname,
                         'email' => $user->email,
+                        $tokenData,
                     ];
                     return response($content, 200)
-                        ->header('Token', Hash::make($token))
+                        ->header('Authorization', $token) 
+                        ->header('Token-Expires-At', $expiresAt)
                         ->header('Content-Type', 'application/json')
+                        ->header('Access-Control-Expose-Headers', '*')
                         ->header('Access-Control-Allow-Origin', '*')
                         ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+
                 } else {
                     $content = [
                         'message' => 'Invalid Credentials'

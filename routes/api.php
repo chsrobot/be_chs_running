@@ -19,7 +19,11 @@ use App\Http\Controllers\Api\PaymentController;
 Route::post('/auth/signup', [AccountController::class, 'signup']);
 Route::post('/auth/signin', [AccountController::class, 'signin']);
 Route::post('/info', [InformationController::class, 'insertOrUpdateInformation']);
-Route::get('/info', [InformationController::class, 'getInformationByEmail']);
+//Route::get('/info', [InformationController::class, 'getInformationByEmail']);
+
+Route::group(['middleware' => 'token.validate'], function () {
+    Route::get('/info', [InformationController::class, 'getInformationByEmail']);
+});
 
 
 //Route::get('/payment', [PaymentController::class, 'index']);
@@ -28,7 +32,7 @@ Route::get('/info', [InformationController::class, 'getInformationByEmail']);
 Route::apiResource('/payment', PaymentController::class);
 
 
-Route::get('/signup', [AccountController::class, 'test']);
+Route::post('/test', [AccountController::class, 'test']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
