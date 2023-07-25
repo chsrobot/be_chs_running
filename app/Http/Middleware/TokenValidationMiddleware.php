@@ -37,7 +37,7 @@ class TokenValidationMiddleware
             return response()->json(['error' => 'Invalid token'], 401);
         }
         if (Hash::check($generatedToken, $token)) {
-            return response()->json(['error' => 'OK'], 200);
+            return $next($request);
         }
 
         return $next($request);

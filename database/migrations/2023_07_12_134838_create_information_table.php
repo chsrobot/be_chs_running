@@ -13,20 +13,18 @@ return new class extends Migration
     {
         Schema::create('information', function (Blueprint $table) {
             $table->id();
+            $table->string('email');
+            $table->string('idcard');
             $table->string('gender');
             $table->string('type_run');
             $table->string('birthdate');
-            $table->string('bibnumber');
+            $table->string('bibnumber')->nullable();
             $table->string('phonenumber');
-            $table->string('idcard');
             $table->string('healthproblems');
             $table->string('emergencyphone');
             $table->string('emergencontact');
             $table->string('relationship');
             $table->string('bloodtype');
-            $table->string('email')->unique();
-            
-            $table->string('bib_number')->nullable();
 
             $table->timestamps();
         });

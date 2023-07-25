@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Account;
 use App\Models\Information;
+use App\Models\OthersInformation;
 use Illuminate\Support\Facades\Hash;
 
 class InformationController extends Controller
@@ -31,7 +32,6 @@ class InformationController extends Controller
                 'message' => $message,
             ];
             return response($content, $status)
-                ->header('Token', Hash::make('secret'))
                 ->header('Content-Type', 'application/json')
                 ->header('Access-Control-Allow-Origin', '*')
                 ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
@@ -63,6 +63,102 @@ class InformationController extends Controller
                 ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
         }
     }
+
+    public function insertFriendsInformation(Request $request)
+    {
+        try {
+            $data = $request->all();
+            $friendsInformation = OthersInformation::create($data);
+    
+            $message = 'Created';
+            $status = 201;
+    
+            return response()->json([
+                'message' => $message,
+                'data' => $friendsInformation,
+            ], $status);
+    
+        } catch (\Exception $e) {
+
+            $content = [
+                'message' => 'An error occurred.',
+                'error' => $e->getMessage(),
+            ];
+            return response()->json($content, 500)
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+        }
+    }
+
+    public function viewFriendsInformationByEmail(Request $request)
+{
+    try {
+        $email = $request->email;
+        $friendsInformation = OthersInformation::where('email', $email)->get();
+
+        if (!$friendsInformation) {
+            $content = [
+                'message' => 'Data not found.',
+            ];
+            return response()->json($content, 404)
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+        }
+
+        $message = 'Data found';
+        $status = 200;
+
+        return response()->json([
+            'message' => $message,
+            'data' => $friendsInformation,
+        ], $status);
+
+    } catch (\Exception $e) {
+        $content = [
+            'message' => 'An error occurred.',
+            'error' => $e->getMessage(),
+        ];
+        return response()->json($content, 500)
+            ->header('Access-Control-Allow-Origin', '*')
+            ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+    }
+}
+
+public function deleteFriendsInformationByIdCard(Request $request)
+{
+    try {
+        $email = $request->email;
+        $idcard = $request->idcard;
+        $friendsInformation = OthersInformation::where('idcard', $idcard)->first();
+
+        if (!$friendsInformation) {
+            $content = [
+                'message' => 'Data not found.',
+            ];
+            return response()->json($content, 404)
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+        }
+
+        $friendsInformation->delete();
+        $message = 'Data deleted';
+        $status = 200;
+
+        return response()->json([
+            'message' => $message,
+        ], $status);
+
+    } catch (\Exception $e) {
+        $content = [
+            'message' => 'An error occurred.',
+            'error' => $e->getMessage(),
+        ];
+        return response()->json($content, 500)
+            ->header('Access-Control-Allow-Origin', '*')
+            ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+    }
+}
+
     
     public function index()
     {

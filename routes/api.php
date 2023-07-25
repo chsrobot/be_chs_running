@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\InformationController;
 use App\Http\Controllers\Api\PaymentController;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,11 +19,20 @@ use App\Http\Controllers\Api\PaymentController;
 */
 Route::post('/auth/signup', [AccountController::class, 'signup']);
 Route::post('/auth/signin', [AccountController::class, 'signin']);
-Route::post('/info', [InformationController::class, 'insertOrUpdateInformation']);
+
 //Route::get('/info', [InformationController::class, 'getInformationByEmail']);
 
 Route::group(['middleware' => 'token.validate'], function () {
-    Route::get('/info', [InformationController::class, 'getInformationByEmail']);
+    Route::post('/info/me', [InformationController::class, 'insertOrUpdateInformation']);
+    Route::get('/info/me', [InformationController::class, 'getInformationByEmail']);
+
+
+
+    Route::post('/info/friend', [InformationController::class, 'insertFriendsInformation']);
+    Route::get('/info/friend', [InformationController::class, 'viewFriendsInformationByEmail']);
+
+
+    Route::delete('/info/friend', [InformationController::class, 'deleteFriendsInformationByIdCard']);
 });
 
 
