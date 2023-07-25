@@ -9,6 +9,7 @@ class order extends Model
 {
     use HasFactory;
     protected $table = 'order';
+    protected $primaryKey = 'email';
     protected $fillable = [
         'orderhat',
         'ordershirt',
