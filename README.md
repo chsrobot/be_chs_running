@@ -81,7 +81,7 @@ Status Code 404
 }
 ``` 
 
-### /info/set
+### /info/me
 
 Method: POST
 
@@ -121,7 +121,7 @@ Status Code 200
 ``` 
 
 
-### /info/get
+### /info/me
 
 Method: GET
 
@@ -161,4 +161,130 @@ Status Code 404
 }
 ``` 
 
-### /payment
+### /info/friend
+
+Method: POST
+
+Description: Save Friend Information
+
+Request Body:
+``` 
+{
+  "name": "",
+  "lastname": "",
+  "gender": "",
+  "type_run": "",
+  "birthdate": "",
+  "bibnumber": "",
+  "phonenumber": "",
+  "idcard": "",
+  "healthproblems": "",
+  "emergencyphone": "",
+  "emergencontact": "",
+  "relationship": "",
+  "bloodtype": "",
+  "email": "",
+  "bib_number": ""
+}
+``` 
+Response Body: (If First Time Create)
+``` 
+Status Code 201
+{
+  "message": "Created"
+}
+"data":
+[
+  {
+  "gender": "",
+  "type_run": "",
+  "birthdate": "",
+  "bibnumber": "",
+  "phonenumber": "",
+  "idcard": "",
+  "healthproblems": "",
+  "emergencyphone": "",
+  "emergencontact": "",
+  "relationship": "",
+  "bloodtype": "",
+  "email": "",
+  "bib_number": ""
+}
+]
+``` 
+
+### /info/friend
+
+Method: GET
+
+Description: Get Friend (List) Information
+
+Request Body:
+``` 
+{
+  "email": ""
+}
+``` 
+Response Body: (If Data Exist)
+``` 
+Status Code 200
+"message": "Data found",
+"data":
+[
+  {
+  "gender": "",
+  "type_run": "",
+  "birthdate": "",
+  "bibnumber": "",
+  "phonenumber": "",
+  "idcard": "",
+  "healthproblems": "",
+  "emergencyphone": "",
+  "emergencontact": "",
+  "relationship": "",
+  "bloodtype": "",
+  "email": "",
+  "bib_number": ""
+}
+]
+``` 
+Response Body: (If Data Doesn't Exist)
+
+``` 
+Status Code 404
+{
+  "message": "User Not Found",
+}
+``` 
+
+
+
+### /info/friend
+
+Method: DELETE
+
+Description: Get Friend (List) Information
+
+Request Body:
+``` 
+{
+  "email": "",
+  "idcard":""
+}
+``` 
+Response Body: (If Data Exist)
+``` 
+Status Code 200
+"data":
+{
+    "message": "Data deleted"
+}
+``` 
+Response Body: (If Data Doesn't Exist)
+
+``` 
+Status Code 404
+{
+  "message" : "Data not found"
+}
+``` 
