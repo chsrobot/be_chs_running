@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\InformationController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\OrderController;
+
 
 
 /*
@@ -48,6 +51,16 @@ Route::post('/test', [AccountController::class, 'test']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 
-Route::resource('orders', 'OrderController::class');
+
+Route::get('/orders', [OrderController::class, 'index']);
+Route::get('/orders/{email}', [OrderController::class, 'show']);
+Route::put('/orders/{email}', [OrderController::class, 'update']);
+
+Route::delete('/orders/{email}', [OrderController::class, 'destroy']);
+
+
+Route::get('/products', [ProductController::class, 'index']);
+Route::post('/products', [ProductController::class, 'store']);
+Route::get('/products/{id}', [ProductController::class, 'show']);
 
 });
