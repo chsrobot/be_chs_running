@@ -10,7 +10,7 @@ class OthersInformation extends Model
     use HasFactory;
     protected $table = 'others_information';
     protected $fillable = [
-        'gender', 'type_run', 'birthdate', 'bibnumber', 'phonenumber',
+        'gender','name','lastname', 'type_run', 'birthdate', 'bibnumber', 'phonenumber',
         'idcard', 'healthproblems', 'emergencyphone', 'emergencontact',
         'relationship', 'bloodtype', 'email'
     ];
