@@ -10,12 +10,12 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::all();
-        return view('products.index', compact('products'));
+        return response()->json(['message' => 'Data found', 'data' => $products], 200);
     }
 
     public function create()
     {
-        return view('products.create');
+        
     }
     public function store(Request $request)
     {
@@ -23,7 +23,7 @@ class ProductController extends Controller
             'name' => 'required|string',
             'price' => 'required|numeric',
         ]);
-        $productData = [
+        $products = [
             ['name' => 'Hat1', 'price' => $request->input('price')],
             ['name' => 'Hat2', 'price' => $request->input('price')],
             ['name' => 'Shirt2km', 'price' => $request->input('price')],
@@ -32,14 +32,14 @@ class ProductController extends Controller
             ['name' => 'Shirtvip', 'price' => $request->input('price')],
         ];
         try {
-            if (count($productData) > 0) {
-                Product::insert($productData);
-                return response()->json(['message' => 'บันทึกสินค้าเรียบร้อยแล้ว'], 201);
+            if (count($products) > 0) {
+                Product::insert($products);
+                return response()->json(['message' => 'Product saved'], 201);
             } else {
-                return response()->json(['message' => 'ไม่พบข้อมูลสินค้าที่ต้องการบันทึก'], 422);
+                return response()->json(['message' => 'Not found Product'], 422);
             }
         } catch (\Exception $e) {
-                return response()->json(['error' => $e->getMessage()], 500);
+                return response()->json(['error' => $e->getMessage('error')], 500);
         }
     }
     public function show($id)
