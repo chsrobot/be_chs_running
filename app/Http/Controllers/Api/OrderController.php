@@ -50,16 +50,28 @@ class OrderController extends Controller
     return response()->json(['message' => 'orders updated'], 200);
     }
 
-    public function destroy($email)
+    public function destroy(Request $request)
     {
-        $order = Order::find($email);
-        if (!$order) {
-            return response()->json(['error' => 'Order not found'], 404);
-        }
-        $order->delete();
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email|exists:orders,email',
+    ]);
 
-        return response()->json(['message' => 'order deleted'], 200);
+    if ($validator->fails()) {
+        return response()->json(['error' => $validator->errors()], 404);
     }
+
+    $email = $request->input('email');
+    $order = Order::where('email', $email)->first();
+
+    if (!$order) {
+        return response()->json(['message' => 'Data not found'], 404);
+    }
+
+    $order->delete();
+
+    return response()->json(['message' => 'Data deleted'], 200);
+    }
+
     public function store(Request $request)
     {
     $validator = Validator::make($request->all(), [
