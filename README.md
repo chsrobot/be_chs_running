@@ -287,4 +287,154 @@ Status Code 404
 {
   "message" : "Data not found"
 }
+```
+
+### /product/
+Method: POST
+
+Description: Save Product
+
+Request Body:
 ``` 
+{
+  "type_hat": "",
+  "type_shirt": "",
+  "price_hat": "",
+  "price_shirt": ""
+}
+``` 
+Response Body: (If First Time Create)
+``` 
+Status Code 201
+{
+  "message": "Created"
+}
+``` 
+Response Body: (If Update Exist Data)
+``` 
+Status Code 200
+{
+  "message": "Updated"
+}
+``` 
+
+### /product/
+Method: GET
+
+Description: Get product 
+
+Request Body:
+``` 
+{
+  "id": ""
+}
+``` 
+Response Body: (If Data Exist)
+``` 
+Status Code 200
+"message": "Data found",
+"data":
+[
+  {
+  "type_hat": "",
+  "type_shirt": "",
+  "price_hat": "",
+  "price_shirt": ""
+}
+]
+``` 
+Response Body: (If Data Doesn't Exist)
+
+``` 
+Status Code 404
+{
+  "message": " Not Found Product",
+}
+```
+
+### /order/
+Method: get
+
+Description: get order Information
+
+Request Body:
+``` 
+{
+  "orderhat": "",
+  "ordershirt": "",
+  "order_pricehat": "",
+  "order_priceshirt: "",
+}
+``` 
+Response Body: (If First Time Create)
+``` 
+Status Code 201
+{
+  "message": "Created"
+}
+``` 
+Response Body: (If Update Exist Data)
+``` 
+Status Code 200
+{
+  "message": "Updated"
+}
+``` 
+
+
+### /order/
+Method: PUT
+
+Description: put order 
+
+Request Body:
+``` 
+{
+  "orderhat": "",
+  "ordershirt": "",
+  "order_pricehat": "",
+  "order_priceshirt: "",
+}
+``` 
+Response Body: (If First Time Create)
+``` 
+Status Code 201
+{
+  "message": "Created"
+}
+``` 
+Response Body: (If Update Exist Data)
+``` 
+Status Code 200
+{
+  "message": "Updated"
+}
+```
+
+### /Order/
+Method: DELETE
+
+Description: delete order 
+
+Request Body:
+``` 
+{
+  "email": "",
+}
+``` 
+Response Body: (If Data Exist)
+``` 
+Status Code 200
+"data":
+{
+    "message": "Data deleted"
+}
+``` 
+Response Body: (If Data Doesn't Exist)
+
+``` 
+Status Code 404
+{
+  "message" : "Data not found"
+}
+```
