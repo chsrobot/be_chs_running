@@ -11,6 +11,7 @@ class order extends Model
     protected $table = 'order';
     protected $primaryKey = 'email';
     protected $fillable = [
+        'email',
         'orderhat',
         'ordershirt',
         'order_pricehat',

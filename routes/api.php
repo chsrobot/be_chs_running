@@ -36,6 +36,17 @@ Route::group(['middleware' => 'token.validate'], function () {
 
 
     Route::delete('/info/friend', [InformationController::class, 'deleteFriendsInformationByIdCard']);
+
+    Route::post('/orders', [OrderController::class, 'store']);
+    Route::get('/orders/{email}', [OrderController::class, 'show']);
+    Route::put('/orders/{email}', [OrderController::class, 'update']);
+
+    Route::delete('/orders/{email}', [OrderController::class, 'destroy']);
+
+
+
+    Route::post('/products', [ProductController::class, 'store']);
+    Route::get('/products/{id}', [ProductController::class, 'show']);
 });
 
 
