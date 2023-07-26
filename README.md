@@ -294,7 +294,6 @@ Method: POST
 
 Description: Save Product
 
-Request Body:
 ``` 
 {
   "type_hat": "",
@@ -353,13 +352,41 @@ Status Code 404
 ```
 
 ### /order/
-Method: get
+Method: GET
 
-Description: get order Information
+Description: Get product 
+
+``` 
+Status Code 200
+"message": "Data found",
+"data":
+[
+  {
+  "email": "",
+  "orderhat": "",
+  "ordershirt": "",
+  "order_pricehat": "",
+  "order_priceshirt": "",
+}
+]
+```
+Response Body: (If Data Doesn't Exist)
+``` 
+Status Code 404
+{
+  "message": " Not Found order",
+}
+```
+
+### /order/
+Method: PUT
+
+Description: put order 
 
 Request Body:
 ``` 
 {
+  "email": "",
   "orderhat": "",
   "ordershirt": "",
   "order_pricehat": "",
@@ -379,17 +406,15 @@ Status Code 200
 {
   "message": "Updated"
 }
-``` 
-
-
+```
 ### /order/
-Method: PUT
+Method: POST
 
-Description: put order 
+Description: Save order
 
-Request Body:
 ``` 
 {
+  "email": "",
   "orderhat": "",
   "ordershirt": "",
   "order_pricehat": "",
@@ -400,7 +425,7 @@ Response Body: (If First Time Create)
 ``` 
 Status Code 201
 {
-  "message": "Created"
+  "message": "order Created"
 }
 ``` 
 Response Body: (If Update Exist Data)
@@ -427,7 +452,7 @@ Response Body: (If Data Exist)
 Status Code 200
 "data":
 {
-    "message": "Data deleted"
+    "message": "order deleted"
 }
 ``` 
 Response Body: (If Data Doesn't Exist)
@@ -435,6 +460,6 @@ Response Body: (If Data Doesn't Exist)
 ``` 
 Status Code 404
 {
-  "message" : "Data not found"
+  "message" : "order not found"
 }
 ```
