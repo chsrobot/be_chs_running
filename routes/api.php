@@ -52,14 +52,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 
 
-Route::get('/orders', [OrderController::class, 'index']);
 Route::get('/orders/{email}', [OrderController::class, 'show']);
 Route::put('/orders/{email}', [OrderController::class, 'update']);
 
 Route::delete('/orders/{email}', [OrderController::class, 'destroy']);
 
 
-Route::get('/products', [ProductController::class, 'index']);
+
 Route::post('/products', [ProductController::class, 'store']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 

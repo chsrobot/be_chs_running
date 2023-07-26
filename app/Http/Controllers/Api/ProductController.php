@@ -36,7 +36,7 @@ class ProductController extends Controller
                 Product::insert($products);
                 return response()->json(['message' => 'Product saved'], 201);
             } else {
-                return response()->json(['message' => 'Not found Product'], 422);
+                return response()->json(['message' => 'Not found Product'], 404);
             }
         } catch (\Exception $e) {
                 return response()->json(['error' => $e->getMessage('error')], 500);
