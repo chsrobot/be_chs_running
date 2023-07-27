@@ -21,6 +21,11 @@ class TokenValidationMiddleware
 
         $expiresAt = $request->header('Token-Expires-At');
 
+        if(Carbon::isPast($expiresAt))
+        {
+            return response()->json(['error' => 'Token Expired'], 401);
+        }
+
         if (empty($token) || empty($expiresAt)) {
             return response()->json(['error' => 'Invalid token or expiresAt headers'], 401);
         }
