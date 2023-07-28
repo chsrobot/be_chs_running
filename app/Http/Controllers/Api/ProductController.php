@@ -24,14 +24,14 @@ class ProductController extends Controller
             $productData['picture_path'] = $picturePath;
         }
     
-        $product = Product::create($productData);
+        $product = ProductList::create($productData);
     
         return response()->json(['message' => 'Product created successfully', 'data' => $product], 201);
     }
     
     public function update(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
+        $product = ProductList::findOrFail($id);
     
         $request->validate([
             'name' => 'required|string',
@@ -60,7 +60,7 @@ class ProductController extends Controller
 
     public function destroy($id)
     {
-        $product = Product::findOrFail($id);
+        $product = ProductList::findOrFail($id);
         $product->delete();
         return response()->json(['message' => 'Product deleted successfully'], 200);
     }
