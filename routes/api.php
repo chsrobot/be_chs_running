@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\InformationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\OrderController;
 
 
 
@@ -37,19 +36,13 @@ Route::group(['middleware' => 'token.validate'], function () {
 
     Route::delete('/info/friend', [InformationController::class, 'deleteFriendsInformationByIdCard']);
 
-    Route::post('/orders', [OrderController::class, 'store']);
-    Route::get('/orders/{email}', [OrderController::class, 'show']);
-    Route::put('/orders/{email}', [OrderController::class, 'update']);
-
-    Route::delete('/orders/{email}', [OrderController::class, 'destroy']);
-
-
-
     Route::post('/products', [ProductController::class, 'store']);
-    Route::get('/products/{id}', [ProductController::class, 'show']);
+
+    
 });
 
-
+Route::get('/products', [ProductController::class, 'index']);
+Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 //Route::get('/payment', [PaymentController::class, 'index']);
 //Route::post('/payment', [PaymentController::class, 'store']);
 
@@ -61,16 +54,4 @@ Route::post('/test', [AccountController::class, 'test']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
-
-
-Route::get('/orders/{email}', [OrderController::class, 'show']);
-Route::put('/orders/{email}', [OrderController::class, 'update']);
-
-Route::delete('/orders/{email}', [OrderController::class, 'destroy']);
-
-
-
-Route::post('/products', [ProductController::class, 'store']);
-Route::get('/products/{id}', [ProductController::class, 'show']);
-
 });
