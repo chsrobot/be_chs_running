@@ -109,7 +109,6 @@ class InformationController extends Controller
         $status = 200;
 
         return response()->json([
-            'message' => $message,
             'data' => $friendsInformation,
         ], $status);
 

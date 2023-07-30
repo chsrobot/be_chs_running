@@ -29,25 +29,18 @@ Route::group(['middleware' => 'token.validate'], function () {
     Route::get('/info/me', [InformationController::class, 'getInformationByEmail']);
 
 
-
     Route::post('/info/friend', [InformationController::class, 'insertFriendsInformation']);
-    Route::get('/info/friend', [InformationController::class, 'viewFriendsInformationByEmail']);
-
-
+    Route::post('/info/getfriend', [InformationController::class, 'viewFriendsInformationByEmail']);
     Route::delete('/info/friend', [InformationController::class, 'deleteFriendsInformationByIdCard']);
 
     Route::post('/products', [ProductController::class, 'store']);
-
-    
+    Route::apiResource('/payment', PaymentController::class);
 });
 
 Route::get('/products', [ProductController::class, 'index']);
 Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 //Route::get('/payment', [PaymentController::class, 'index']);
 //Route::post('/payment', [PaymentController::class, 'store']);
-
-Route::apiResource('/payment', PaymentController::class);
-
 
 Route::post('/test', [AccountController::class, 'test']);
 
