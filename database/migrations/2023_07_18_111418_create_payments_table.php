@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('email_uploader');
             $table->string('picture_path');
-            $table->enum('status', ['pending', 'checked'])->default('pending');
+            $table->enum('status', ['waiting','pending', 'checked'])->default('pending');
             $table->string('email_checker')->nullable();
             $table->timestamp('timestamp')->nullable();
             $table->timestamps();

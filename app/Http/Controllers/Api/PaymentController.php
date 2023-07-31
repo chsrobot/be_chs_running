@@ -96,6 +96,7 @@ class PaymentController extends Controller
             
         $paymentEvidence = Payment::where('email_uploader', $email)->first();
         $evidence = $paymentEvidence->picture_path ?? null;
+        $status = $paymentEvidence->status ?? null;
 
         $toMyPay = $this->getPriceRun($myPay->type_run ?? null);
 
