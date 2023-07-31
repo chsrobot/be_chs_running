@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Account;
+use App\Models\Payment;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
