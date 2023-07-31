@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AccountController;
 use App\Http\Controllers\Api\InformationController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ProductController;
 
 
@@ -35,6 +36,9 @@ Route::group(['middleware' => 'token.validate'], function () {
 
     Route::post('/products', [ProductController::class, 'store']);
     Route::apiResource('/payment', PaymentController::class);
+    Route::apiResource('/order', OrderController::class);
+    Route::post('/orderlist', [OrderController::class, 'getfromemail']);
+    Route::post('/paymentrun', [PaymentController::class, 'topayRunning']);
 });
 
 Route::get('/products', [ProductController::class, 'index']);

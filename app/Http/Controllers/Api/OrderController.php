@@ -19,15 +19,23 @@ class OrderController extends Controller
         }
     }
 
+    public function getfromemail(Request $request)
+{
+    try {
+        $user_email = $request->email;
+        $orders = Order::where('user_email', $user_email)->get(); 
+        return response()->json($orders);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Something went wrong'], 500);
+    }
+}
+
     public function store(Request $request)
     {
-        try {
-            $request->validate([
-                'user_email' => 'required|email',
-                'product_name' => 'required|string',
-                'quantity' => 'required|integer|min:1',
-            ]);
 
+        error_log($request);
+
+        try {
             $order = Order::create([
                 'user_email' => $request->user_email,
                 'product_name' => $request->product_name,

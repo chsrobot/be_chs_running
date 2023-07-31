@@ -7,10 +7,47 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Information;
+use App\Models\OthersInformation;
 
 
 class PaymentController extends Controller
 {
+
+
+
+    public function getPrice($type) {
+        switch ($type) {
+            case "2":
+                return 300;
+            case "5":
+                return 500;
+            case "10":
+                return 600;
+            case "VIP":
+                return 1300;
+            default:
+                return 0;
+        }
+    }
+    
+    public function topayRunning(Request $request) {
+        $email = $request->email;
+        $myPay = Information::where("email", $email)->first();
+        $otherPay = OthersInformation::where("email", $email)->get();
+    
+        $topay = $this->getPrice($myPay->type_run);
+    
+        foreach ($otherPay as $friend) {
+            $topay += $this->getPrice($friend->type_run);
+        }
+    
+        return response()->json(['cost' => $topay], 500);
+    }
+    
+
+
+
     public function index()
     {
         try {

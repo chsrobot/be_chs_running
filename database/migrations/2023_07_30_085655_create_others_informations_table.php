@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('lastname');
             $table->string('gender');
             $table->string('type_run');
+            $table->string('size');
             $table->string('birthdate');
             $table->string('bibnumber')->nullable();
             $table->string('phonenumber');

@@ -14,9 +14,6 @@ class CreateOrdersTable extends Migration
             $table->string('product_name');
             $table->integer('quantity');
             $table->timestamps();
-
-            // Define foreign key constraint
-            $table->foreign('user_email')->references('email')->on('users')->onDelete('cascade');
         });
     }
 
