@@ -24,7 +24,9 @@ class PaymentController extends Controller
         foreach ($accounts as $account) {
             $email = $account->email;
             $otherPayTotal = 0;
+            $shipment = 0;
             error_log($email);
+            
     
             $paymentEvidence = Payment::where('email_uploader', $email)->first();
             $evidence = $paymentEvidence->picture_path ?? null;
@@ -32,15 +34,32 @@ class PaymentController extends Controller
     
             $orderpay = $this->getPayOrder($email);
             $myPay = Information::where("email", $email)->first();
-            $otherPay = OthersInformation::where("email", $email)->get();
     
-            $toMyPay = $this->getPriceRun($myPay->type_run ?? null);
+            // Handle the case when $myPay is null
+            if (!$myPay) {
+                // Set default values for its properties
+                $toMyPay = 0;
+                $isShipment = false;
+            } else {
+                // Use the actual values from the $myPay object
+                $toMyPay = $this->getPriceRun($myPay->type_run ?? null);
+                $isShipment = $myPay->shipment ?? false;
+            }
+    
+            $otherPay = OthersInformation::where("email", $email)->get();
     
             foreach ($otherPay as $friend) {
                 $otherPayTotal += $this->getPriceRun($friend->type_run ?? null);
             }
     
-            $total = $toMyPay + $otherPayTotal + $orderpay;
+            if ($isShipment == "true") {
+                $shipment += 50;
+    
+                $friendshipment = OthersInformation::where('email', $email)->count();
+                $shipment += ($friendshipment * 10);
+            }
+    
+            $total = $toMyPay + $otherPayTotal + $orderpay + $shipment;
     
             $response[] = [
                 'email' => $email,
@@ -55,24 +74,26 @@ class PaymentController extends Controller
     
         return response()->json(['data' => $response], 200);
     }
+
+    
     
 
-    public function getPayOrder($email){
+    public function getPayOrder($email) {
         $topay = 0;
-        $orderList = Order::where('user_email',$email)->get();
-        
-
-        foreach($orderList as $order){
-            $product = ProductList::where('name',$order->product_name)->get()->first();
-
-            $pricecal = $product->price * $order->quantity;
+        $orderList = Order::where('user_email', $email)->get();
+    
+        foreach ($orderList as $order) {
+            $product = ProductList::where('name', $order->product_name)->get()->first();
+    
+            $pricecal = ($product->price ?? 0) * ($order->quantity ?? 0);
             $topay += $pricecal;
-
         }
+    
         $return = $topay;
-
+    
         return $return;
     }
+    
 
     public function getPriceRun($type) {
         switch ($type) {
@@ -92,9 +113,18 @@ class PaymentController extends Controller
     public function topayRunning(Request $request) {
         $email = $request->email;
         $otherPayTotal = 0;
+        $shipment = 0;
         $myPay = Information::where("email", $email)->first();
         $otherPay = OthersInformation::where("email", $email)->get();
 
+        $isShipment =  $myPay->shipment;
+        
+        if($isShipment == "true"){
+            $shipment += 50;
+
+            $friendshipment = OthersInformation::where('email', $email)->count();
+            $shipment += ($friendshipment * 10);
+        }
             
         $paymentEvidence = Payment::where('email_uploader', $email)->first();
         $evidence = $paymentEvidence->picture_path ?? null;
@@ -108,7 +138,7 @@ class PaymentController extends Controller
 
         $orderpay = $this->getPayOrder($email);
 
-        $total = $toMyPay + $otherPayTotal + $orderpay;
+        $total = $toMyPay + $otherPayTotal + $orderpay + $shipment;
 
        
     
@@ -117,6 +147,7 @@ class PaymentController extends Controller
             'mypay' => $toMyPay,
             'friendpay' => $otherPayTotal,
             'orderpay' => $orderpay,
+            'shipment' => $shipment,
             'totalpay' => $total,
             'status' =>  $status,
             'evidence' => $evidence
