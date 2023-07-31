@@ -17,44 +17,48 @@ use App\Models\OthersInformation;
 class PaymentController extends Controller
 {
 
-public function adminPayment(Request $request) {
-    $accounts = Account::all();
-    $response = [];
-
-    foreach ($accounts as $account) {
-        $email = $account->email;
-        $otherPayTotal = 0;
-        error_log($email);
-
-        $orderpay = $this->getPayOrder($email);
-        $myPay = Information::where("email", $email)->first();
-        $otherPay = OthersInformation::where("email", $email)->get();
-
-        $toMyPay = $this->getPriceRun($myPay->type_run ?? null);
-
-        foreach ($otherPay as $friend) {
-            $otherPayTotal += $this->getPriceRun($friend->type_run ?? null);
+    public function adminPayment(Request $request) {
+        $accounts = Account::all();
+        $response = [];
+    
+        foreach ($accounts as $account) {
+            $email = $account->email;
+            $otherPayTotal = 0;
+            error_log($email);
+    
+            $paymentEvidence = Payment::where('email_uploader', $email)->first();
+            $evidence = $paymentEvidence->picture_path ?? null;
+    
+            $orderpay = $this->getPayOrder($email);
+            $myPay = Information::where("email", $email)->first();
+            $otherPay = OthersInformation::where("email", $email)->get();
+    
+            $toMyPay = $this->getPriceRun($myPay->type_run ?? null);
+    
+            foreach ($otherPay as $friend) {
+                $otherPayTotal += $this->getPriceRun($friend->type_run ?? null);
+            }
+    
+            $total = $toMyPay + $otherPayTotal + $orderpay;
+    
+            $response[] = [
+                'email' => $email,
+                'myPay' => $toMyPay,
+                'otherPay' => $otherPayTotal,
+                'orderPay' => $orderpay,
+                'total' =>  $total,
+                'path' =>  $evidence
+            ];
         }
-
-        
-
-        $total = $toMyPay + $otherPayTotal +$orderpay;
-
-        $response[] = [
-            'email' => $email,
-            'myPay' => $toMyPay,
-            'otherPay' => $otherPayTotal,
-            'orderPay' => $orderpay,
-            'total' =>  $total
-        ];
+    
+        return response()->json(['data' => $response], 200);
     }
-
-    return response()->json(['data' => $response], 200);
-}
+    
 
     public function getPayOrder($email){
         $topay = 0;
         $orderList = Order::where('user_email',$email)->get();
+        
 
         foreach($orderList as $order){
             $product = ProductList::where('name',$order->product_name)->get()->first();
@@ -89,6 +93,10 @@ public function adminPayment(Request $request) {
         $myPay = Information::where("email", $email)->first();
         $otherPay = OthersInformation::where("email", $email)->get();
 
+            
+        $paymentEvidence = Payment::where('email_uploader', $email)->first();
+        $evidence = $paymentEvidence->picture_path ?? null;
+
         $toMyPay = $this->getPriceRun($myPay->type_run ?? null);
 
         foreach ($otherPay as $friend) {
@@ -107,6 +115,7 @@ public function adminPayment(Request $request) {
             'friendpay' => $otherPayTotal,
             'orderpay' => $orderpay,
             'totalpay' => $total,
+            'evidence' => $evidence
         ], 500);
     }
     
