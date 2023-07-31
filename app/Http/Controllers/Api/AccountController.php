@@ -57,6 +57,13 @@ class AccountController extends Controller
                 'password' => Hash::make($request->input('password')),
             ];
             Account::create($data);
+            Payment::create([
+                'email_uploader' => $email,
+                'picture_path' => null,
+                'status' => 'waiting',
+                'email_checker' => null,
+                'timestamp' => now(),
+            ]);
     
             $content = [
                 'message' => 'Created',

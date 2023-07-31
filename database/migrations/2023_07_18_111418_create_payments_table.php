@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('payment_evidences', function (Blueprint $table) {
             $table->id();
             $table->string('email_uploader');
-            $table->string('picture_path');
+            $table->string('picture_path')->nullable();;
             $table->enum('status', ['waiting','pending', 'checked'])->default('waiting');
             $table->string('email_checker')->nullable();
             $table->timestamp('timestamp')->nullable();

@@ -28,6 +28,7 @@ class PaymentController extends Controller
     
             $paymentEvidence = Payment::where('email_uploader', $email)->first();
             $evidence = $paymentEvidence->picture_path ?? null;
+            $status = $paymentEvidence->status ?? null;
     
             $orderpay = $this->getPayOrder($email);
             $myPay = Information::where("email", $email)->first();
@@ -47,6 +48,7 @@ class PaymentController extends Controller
                 'otherPay' => $otherPayTotal,
                 'orderPay' => $orderpay,
                 'total' =>  $total,
+                'status' =>  $status,
                 'path' =>  $evidence
             ];
         }
@@ -116,6 +118,7 @@ class PaymentController extends Controller
             'friendpay' => $otherPayTotal,
             'orderpay' => $orderpay,
             'totalpay' => $total,
+            'status' =>  $status,
             'evidence' => $evidence
         ], 500);
     }
