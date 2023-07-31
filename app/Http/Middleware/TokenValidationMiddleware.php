@@ -28,10 +28,10 @@ class TokenValidationMiddleware
 
 
 
-        if (!$expiresAt || Carbon::parse($expiresAt)->isPast()) {
-            error_log($authorizationHeader);
-            return response()->json(['error' => 'Token Expired'], 401);
-        }
+        // if (!$expiresAt || Carbon::parse($expiresAt)->isPast()) {
+        //     error_log($authorizationHeader);
+        //     return response()->json(['error' => 'Token Expired'], 401);
+        // }
 
 
         if (empty($token) || empty($expiresAt)) {

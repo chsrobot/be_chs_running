@@ -7,6 +7,9 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Account;
+use App\Models\Order;
+use App\Models\ProductList;
 use App\Models\Information;
 use App\Models\OthersInformation;
 
@@ -14,9 +17,58 @@ use App\Models\OthersInformation;
 class PaymentController extends Controller
 {
 
+public function adminPayment(Request $request) {
+    $accounts = Account::all();
+    $response = [];
 
+    foreach ($accounts as $account) {
+        $email = $account->email;
+        $otherPayTotal = 0;
+        error_log($email);
 
-    public function getPrice($type) {
+        $orderpay = $this->getPayOrder($email);
+        $myPay = Information::where("email", $email)->first();
+        $otherPay = OthersInformation::where("email", $email)->get();
+
+        $toMyPay = $this->getPriceRun($myPay->type_run ?? null);
+
+        foreach ($otherPay as $friend) {
+            $otherPayTotal += $this->getPriceRun($friend->type_run ?? null);
+        }
+
+        
+
+        $total = $toMyPay + $otherPayTotal +$orderpay;
+
+        $response[] = [
+            'email' => $email,
+            'myPay' => $toMyPay,
+            'otherPay' => $otherPayTotal,
+            'orderPay' => $orderpay,
+            'total' =>  $total
+        ];
+    }
+
+    return response()->json(['data' => $response], 200);
+}
+
+    public function getPayOrder($email){
+        $topay = 0;
+        $orderList = Order::where('user_email',$email)->get();
+
+        foreach($orderList as $order){
+            $product = ProductList::where('name',$order->product_name)->get()->first();
+
+            $pricecal = $product->price * $order->quantity;
+            $topay += $pricecal;
+
+        }
+        $return = $topay;
+
+        return $return;
+    }
+
+    public function getPriceRun($type) {
         switch ($type) {
             case "2":
                 return 300;
@@ -33,17 +85,31 @@ class PaymentController extends Controller
     
     public function topayRunning(Request $request) {
         $email = $request->email;
+        $otherPayTotal = 0;
         $myPay = Information::where("email", $email)->first();
         $otherPay = OthersInformation::where("email", $email)->get();
-    
-        $topay = $this->getPrice($myPay->type_run);
-    
+
+        $toMyPay = $this->getPriceRun($myPay->type_run ?? null);
+
         foreach ($otherPay as $friend) {
-            $topay += $this->getPrice($friend->type_run);
+            $otherPayTotal += $this->getPriceRun($friend->type_run ?? null);
         }
+
+        $orderpay = $this->getPayOrder($email);
+
+        $total = $toMyPay + $otherPayTotal + $orderpay;
+
+       
     
-        return response()->json(['cost' => $topay], 500);
+
+        return response()->json([
+            'mypay' => $toMyPay,
+            'friendpay' => $otherPayTotal,
+            'orderpay' => $orderpay,
+            'totalpay' => $total,
+        ], 500);
     }
+    
     
 
 

@@ -39,6 +39,7 @@ Route::group(['middleware' => 'token.validate'], function () {
     Route::apiResource('/order', OrderController::class);
     Route::post('/orderlist', [OrderController::class, 'getfromemail']);
     Route::post('/paymentrun', [PaymentController::class, 'topayRunning']);
+    Route::post('/adminpayment', [PaymentController::class, 'adminPayment']);
 });
 
 Route::get('/products', [ProductController::class, 'index']);
