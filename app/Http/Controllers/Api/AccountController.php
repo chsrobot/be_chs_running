@@ -112,7 +112,6 @@ class AccountController extends Controller
                         'name' => $user->name,
                         'lastname' => $user->lastname,
                         'email' => $user->email,
-                        $tokenData,
                     ];
                     return response($content, 200)
                         ->header('Authorization', $token) 

@@ -27,6 +27,9 @@ return new class extends Migration
             $table->string('relationship');
             $table->string('bloodtype');
 
+            $table->string('address')->nullable();
+            $table->string('shipment')->nullable();
+            
             $table->timestamps();
         });
     }

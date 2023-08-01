@@ -12,6 +12,6 @@ class Information extends Model
     protected $fillable = [
         'gender', 'type_run', 'size','birthdate', 'bibnumber', 'phonenumber',
         'idcard', 'healthproblems', 'emergencyphone', 'emergencontact',
-        'relationship', 'bloodtype', 'email'
+        'relationship', 'bloodtype', 'email','address','shipment'
     ];
 }

@@ -31,6 +31,7 @@ class InformationController extends Controller
             $content = [
                 'message' => $message,
             ];
+            error_log($status);
             return response($content, $status)
                 ->header('Content-Type', 'application/json')
                 ->header('Access-Control-Allow-Origin', '*')
