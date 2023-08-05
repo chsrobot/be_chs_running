@@ -159,6 +159,43 @@ public function deleteFriendsInformationByIdCard(Request $request)
     }
 }
 
+public function updateFriendByIdCard(Request $request)
+{
+    try {
+        $idcard = $request->idcard;
+        $friend = OthersInformation::where('idcard', $idcard)->first();
+
+        if (!$friend) {
+            $content = [
+                'message' => 'Friend not found.',
+            ];
+            return response()->json($content, 404)
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+        }
+
+        $data = $request->all();
+        $friend->update($data);
+
+        $message = 'Friend information updated';
+        $status = 200;
+
+        return response()->json([
+            'message' => $message,
+            'data' => $friend,
+        ], $status);
+
+    } catch (\Exception $e) {
+        $content = [
+            'message' => 'An error occurred.',
+            'error' => $e->getMessage(),
+        ];
+        return response()->json($content, 500)
+            ->header('Access-Control-Allow-Origin', '*')
+            ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+    }
+}
+
     
     public function index()
     {

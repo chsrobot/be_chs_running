@@ -33,6 +33,7 @@ Route::group(['middleware' => 'token.validate'], function () {
     Route::post('/info/friend', [InformationController::class, 'insertFriendsInformation']);
     Route::post('/info/getfriend', [InformationController::class, 'viewFriendsInformationByEmail']);
     Route::delete('/info/friend', [InformationController::class, 'deleteFriendsInformationByIdCard']);
+    Route::put('/info/friend', [InformationController::class, 'updateFriendByIdCard']);
 
     Route::post('/products', [ProductController::class, 'store']);
     Route::apiResource('/payment', PaymentController::class);
