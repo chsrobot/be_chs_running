@@ -24,13 +24,9 @@ class PaymentController extends Controller
         $arg1 = escapeshellarg($email);
         $arg2 = escapeshellarg($name);
 
-        exec("sh $scriptPath $arg1 $arg2", $output, $returnVar);
+        exec("$scriptPath $arg1 $arg2");
 
-        if ($returnVar === 0) {
-            return response()->json(['status' => 'success', 'output' => $output]);
-        } else {
-            return response()->json(['status' => 'error', 'output' => $output]);
-        }
+        //$result = shell_exec('/bin/bash /full/path/to/script.sh param1 param2');
     }
 
     public function adminPayment(Request $request) {
