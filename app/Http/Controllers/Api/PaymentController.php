@@ -19,16 +19,12 @@ class PaymentController extends Controller
 
     public function runShellScriptWithArgs($email,$name)
     {
-        $scriptPath = base_path('/home/adminreg/runner_prod/be_chs_running/sendmail.sh');
-
         $arg1 = escapeshellarg($email);
         $arg2 = escapeshellarg($name);
 
-        shell_exec("$scriptPath $arg1 $arg2");
-
-        //$result = shell_exec('/bin/bash /full/path/to/script.sh param1 param2');
+        shell_exec("/home/adminreg/runner_prod/be_chs_running/sendmail.sh $arg1 $arg2");
     }
-
+    
     public function adminPayment(Request $request) {
         $accounts = Account::all();
         $response = [];
