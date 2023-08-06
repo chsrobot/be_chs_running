@@ -122,6 +122,8 @@ class PaymentController extends Controller
                 return 0;
         }
     }
+
+
     
     public function topayRunning(Request $request) {
         $email = $request->email;
