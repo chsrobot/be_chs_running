@@ -24,7 +24,7 @@ class PaymentController extends Controller
 
         shell_exec("/home/adminreg/runner_prod/be_chs_running/sendmail.sh $arg1 $arg2");
     }
-    
+
     public function adminPayment(Request $request) {
         $accounts = Account::all();
         $response = [];
@@ -307,7 +307,10 @@ class PaymentController extends Controller
 
             $name = $name->name;
 
-            $this->runShellScriptWithArgs($email_uploader,$name);
+            if($status == "checked"){
+                $this->runShellScriptWithArgs($email_uploader,$name);
+            }
+            
 
             $content = [
                 'message' => 'Payment status updated successfully.',
