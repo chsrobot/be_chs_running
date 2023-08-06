@@ -14,16 +14,23 @@ class InformationController extends Controller {
 
     public function isPaymentChecked( $email ) {
         $myPay = Payment::where( 'email_uploader', $email )->first();
-        $isCheck = $myPay->status;
+        $isCheck = $myPay->status ?? null;
+        error_log( 'Hello ??' );
+        error_log( $isCheck );
         if ( $isCheck == 'checked' ) {
             return true;
+        }
+        else{
+            return false;
         }
     }
 
     public function insertOrUpdateInformation( Request $request ) {
         try {
 
-            $email = $request->email;
+            $data = $request->all();
+            $email = $data['email'];
+
             if ( $this->isPaymentChecked( $email ) ) {
                 $content = [
                     'message' => 'Cannot update: Payment evidence status is checked',
@@ -85,7 +92,8 @@ class InformationController extends Controller {
     public function insertFriendsInformation( Request $request ) {
         try {
 
-            $email = $request->email;
+            $data = $request->all();
+            $email = $data['email'];
             if ( $this->isPaymentChecked( $email ) ) {
                 $content = [
                     'message' => 'Cannot update: Payment evidence status is checked',
@@ -153,7 +161,8 @@ class InformationController extends Controller {
     public function deleteFriendsInformationByIdCard( Request $request ) {
         try {
 
-            $email = $request->email;
+            $data = $request->all();
+            $email = $data['email'];
             if ( $this->isPaymentChecked( $email ) ) {
                 $content = [
                     'message' => 'Cannot update: Payment evidence status is checked',
@@ -198,7 +207,8 @@ class InformationController extends Controller {
     public function updateFriendByIdCard( Request $request ) {
         try {
 
-            $email = $request->email;
+            $data = $request->all();
+            $email = $data['email'];
             if ( $this->isPaymentChecked( $email ) ) {
                 $content = [
                     'message' => 'Cannot update: Payment evidence status is checked',

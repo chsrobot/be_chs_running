@@ -41,7 +41,8 @@ class OrderController extends Controller {
     public function store( Request $request ) {
         try {
 
-            $email = $request->email;
+            $data = $request->all();
+            $email = $data['email'];
             if ( $this->isPaymentChecked( $email ) ) {
                 $content = [
                     'message' => 'Cannot update: Payment evidence status is checked',
@@ -76,7 +77,8 @@ class OrderController extends Controller {
     public function update( Request $request, $id ) {
         try {
 
-            $email = $request->email;
+            $data = $request->all();
+            $email = $data['email'];
             if ( $this->isPaymentChecked( $email ) ) {
                 $content = [
                     'message' => 'Cannot update: Payment evidence status is checked',
@@ -98,7 +100,8 @@ class OrderController extends Controller {
     public function destroy( $id ) {
         try {
 
-            $email = $request->email;
+            $data = $request->all();
+            $email = $data['email'];
             if ( $this->isPaymentChecked( $email ) ) {
                 $content = [
                     'message' => 'Cannot update: Payment evidence status is checked',
