@@ -17,6 +17,22 @@ use App\Models\OthersInformation;
 class PaymentController extends Controller
 {
 
+    public function runShellScriptWithArgs($email,$name)
+    {
+        $scriptPath = base_path('/home/adminreg/runner_prod/be_chs_running/sendmail.sh');
+
+        $arg1 = escapeshellarg($email);
+        $arg2 = escapeshellarg($name);
+
+        exec("sh $scriptPath $arg1 $arg2", $output, $returnVar);
+
+        if ($returnVar === 0) {
+            return response()->json(['status' => 'success', 'output' => $output]);
+        } else {
+            return response()->json(['status' => 'error', 'output' => $output]);
+        }
+    }
+
     public function adminPayment(Request $request) {
         $accounts = Account::all();
         $response = [];
@@ -294,6 +310,12 @@ class PaymentController extends Controller
             $payment->status = $status;
             $payment->email_checker = $email_checker;
             $payment->save();
+
+            $name = Account::where("email",$email_uploader)->get()->first();
+
+            $name = $name->name;
+
+            $this->runShellScriptWithArgs($email_uploader,$name);
 
             $content = [
                 'message' => 'Payment status updated successfully.',
