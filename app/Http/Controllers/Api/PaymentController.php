@@ -71,8 +71,21 @@ class PaymentController extends Controller
                 'path' =>  $evidence
             ];
         }
+        $sortedResponse = collect($response)->sortBy(function ($item) {
+            switch ($item['status']) {
+                case 'pending':
+                    return 1;
+                case 'checked':
+                    return 2;
+                case 'waiting':
+                    return 3;
+                default:
+                    return 4;
+            }
+        })->values()->all();
     
-        return response()->json(['data' => $response], 200);
+        return response()->json(['data' => $sortedResponse], 200);
+        //return response()->json(['data' => $response], 200);
     }
 
     
