@@ -247,4 +247,55 @@ class PaymentController extends Controller
             return response()->json(['error' => 'Something went wrong'], 500);
         }
     }
+
+    public function changePaymentStatus(Request $request)
+    {
+        try {
+            $status = $request->input('status');
+            $email_checker = $request->input('email');
+            $email_uploader =$request->input('email_uploader');
+
+            if ($status !== 'pending' && $status !== 'checked') {
+                $content = [
+                    'message' => 'Invalid status. The status must be either "pending" or "checked".',
+                ];
+                return response($content, 400)
+                    ->header('Content-Type', 'application/json')
+                    ->header('Access-Control-Allow-Origin', '*')
+                    ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+            }
+
+            $payment = Payment::where("email_uploader",$email_uploader)->get()->first();
+            if (!$payment) {
+                $content = [
+                    'message' => 'Payment record not found.',
+                ];
+                return response($content, 404)
+                    ->header('Content-Type', 'application/json')
+                    ->header('Access-Control-Allow-Origin', '*')
+                    ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+            }
+
+            $payment->status = $status;
+            $payment->email_checker = $email_checker;
+            $payment->save();
+
+            $content = [
+                'message' => 'Payment status updated successfully.',
+            ];
+            return response($content, 200)
+                ->header('Content-Type', 'application/json')
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+        } catch (\Exception $e) {
+            $content = [
+                'message' => 'An error occurred.',
+                'error' => $e->getMessage(),
+            ];
+            return response($content, 500)
+                ->header('Content-Type', 'application/json')
+                ->header('Access-Control-Allow-Origin', '*')
+                ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+        }
+    }
 }
