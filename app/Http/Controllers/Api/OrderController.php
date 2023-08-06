@@ -100,18 +100,6 @@ class OrderController extends Controller {
     public function destroy( $id ) {
         try {
 
-            $data = $request->all();
-            $email = $data['email'];
-            if ( $this->isPaymentChecked( $email ) ) {
-                $content = [
-                    'message' => 'Cannot update: Payment evidence status is checked',
-                ];
-                return response( $content, 200)
-                ->header( 'Content-Type', 'application/json' )
-                ->header( 'Access-Control-Allow-Origin', '*' )
-                ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
-            }
-
             $order = Order::findOrFail( $id );
             $order->delete();
             return response()->json( null, 204 );
