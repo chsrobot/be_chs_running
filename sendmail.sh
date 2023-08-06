@@ -32,7 +32,7 @@ curl \
 	--url 'smtps://smtp.gmail.com:465' \
 	--ssl-reqd \
 	--mail-from '38332@chs.ac.th' \
-	--mail-rcpt "'".$recipient_email."'" \
+	--mail-rcpt $recipient_email \
 	--upload-file $email_file \
 	--user '38332@chs.ac.th:zhtezcrpoqpemktk'
 
