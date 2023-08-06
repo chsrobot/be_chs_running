@@ -38,6 +38,7 @@ class PaymentController extends Controller
     
             $paymentEvidence = Payment::where('email_uploader', $email)->first();
             $evidence = $paymentEvidence->picture_path ?? null;
+            $whocheck = $paymentEvidence->email_checker ?? null;
             $status = $paymentEvidence->status ?? null;
     
             $orderpay = $this->getPayOrder($email);
@@ -76,7 +77,8 @@ class PaymentController extends Controller
                 'orderPay' => $orderpay,
                 'total' =>  $total,
                 'status' =>  $status,
-                'path' =>  $evidence
+                'path' =>  $evidence,
+                'whocheck' => $whocheck
             ];
         }
         $sortedResponse = collect($response)->sortBy(function ($item) {
