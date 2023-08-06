@@ -24,7 +24,7 @@ class PaymentController extends Controller
         $arg1 = escapeshellarg($email);
         $arg2 = escapeshellarg($name);
 
-        exec("$scriptPath $arg1 $arg2");
+        shell_exec("$scriptPath $arg1 $arg2");
 
         //$result = shell_exec('/bin/bash /full/path/to/script.sh param1 param2');
     }
