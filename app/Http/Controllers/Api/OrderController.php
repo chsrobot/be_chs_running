@@ -13,8 +13,6 @@ class OrderController extends Controller {
     public function isPaymentChecked( $email ) {
         $myPay = Payment::where( 'email_uploader', $email )->first();
         $isCheck = $myPay->status;
-        error_log( 'Hello ??' );
-        error_log( $isCheck );
         if ( $isCheck == 'checked' ) {
             return true;
         }
@@ -48,7 +46,7 @@ class OrderController extends Controller {
                 $content = [
                     'message' => 'Cannot update: Payment evidence status is checked',
                 ];
-                return response( $content, 405 )
+                return response( $content, 200)
                 ->header( 'Content-Type', 'application/json' )
                 ->header( 'Access-Control-Allow-Origin', '*' )
                 ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
@@ -83,7 +81,7 @@ class OrderController extends Controller {
                 $content = [
                     'message' => 'Cannot update: Payment evidence status is checked',
                 ];
-                return response( $content, 405 )
+                return response( $content, 200)
                 ->header( 'Content-Type', 'application/json' )
                 ->header( 'Access-Control-Allow-Origin', '*' )
                 ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
@@ -105,7 +103,7 @@ class OrderController extends Controller {
                 $content = [
                     'message' => 'Cannot update: Payment evidence status is checked',
                 ];
-                return response( $content, 405 )
+                return response( $content, 200)
                 ->header( 'Content-Type', 'application/json' )
                 ->header( 'Access-Control-Allow-Origin', '*' )
                 ->header( 'Access-Control-Allow-Headers', 'Origin, Content-Type' );
