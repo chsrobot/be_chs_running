@@ -21,7 +21,7 @@ class PaymentController extends Controller
     public function countList(Request $request) {
 
         $informationData = Information::all();
-        $othersInformationData = OthersInformation::all(); // Assuming you have a model for OthersInformation
+        $othersInformationData = OthersInformation::all(); 
         
         $ageRanges = [
             '0-18' => [0, 18],
@@ -65,7 +65,35 @@ class PaymentController extends Controller
         }
         
         foreach ($othersInformationData as $entry) {
-            // Similar counting logic for OthersInformation
+            $typeRun = $entry->type_run;
+            $gender = $entry->gender;
+            $age = Carbon::parse($entry->birthdate)->age;
+            
+            $ageRange = null;
+            foreach ($ageRanges as $range => $limits) {
+                if ($age >= $limits[0] && $age <= $limits[1]) {
+                    $ageRange = $range;
+                    break;
+                }
+            }
+            
+            if ($ageRange === null) {
+                continue;
+            }
+        
+            if (!isset($counts[$typeRun])) {
+                $counts[$typeRun] = [];
+            }
+            
+            if (!isset($counts[$typeRun][$gender])) {
+                $counts[$typeRun][$gender] = [];
+            }
+            
+            if (!isset($counts[$typeRun][$gender][$ageRange])) {
+                $counts[$typeRun][$gender][$ageRange] = 0;
+            }
+        
+            $counts[$typeRun][$gender][$ageRange]++;
 
         }
     
