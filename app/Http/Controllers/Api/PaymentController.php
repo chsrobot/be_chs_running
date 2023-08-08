@@ -17,6 +17,93 @@ use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
+    public function countListpaid(Request $request)
+    {
+        $counts = [];
+        
+        $checkedEmails = Information::join('payment_evidences', 'information.email', '=', 'payment_evidences.email_uploader')
+            ->where('payment_evidences.status', 'checked')
+            ->pluck('information.email');
+        
+        $informationCheckedData = Information::whereIn('email', $checkedEmails)->get();
+        $othersInformationCheckedData = OthersInformation::whereIn('email', $checkedEmails)->get();
+        
+        $ageRanges = [
+            '0-18' => [0, 18],
+            '19-39' => [19, 39],
+            '40-59' => [40, 59],
+            '60-100' => [60, 100],
+        ];
+        
+        foreach ($informationCheckedData as $information) {
+            $typeRun = $information->type_run;
+            $gender = $information->gender;
+            $age = Carbon::parse($information->birthdate)->age;
+            
+            $ageRange = null;
+            foreach ($ageRanges as $range => $limits) {
+                if ($age >= $limits[0] && $age <= $limits[1]) {
+                    $ageRange = $range;
+                    break;
+                }
+            }
+            
+            if ($ageRange === null) {
+                continue;
+            }
+        
+            if (!isset($counts['information'][$typeRun])) {
+                $counts['information'][$typeRun] = [];
+            }
+            
+            if (!isset($counts['information'][$typeRun][$gender])) {
+                $counts['information'][$typeRun][$gender] = [];
+            }
+            
+            if (!isset($counts['information'][$typeRun][$gender][$ageRange])) {
+                $counts['information'][$typeRun][$gender][$ageRange] = 0;
+            }
+        
+            $counts['information'][$typeRun][$gender][$ageRange]++;
+        }
+        
+        foreach ($othersInformationCheckedData as $othersInformation) {
+            // Similar counting logic for OthersInformation
+            $typeRun = $othersInformation->type_run;
+            $gender = $othersInformation->gender;
+            $age = Carbon::parse($othersInformation->birthdate)->age;
+            
+            $ageRange = null;
+            foreach ($ageRanges as $range => $limits) {
+                if ($age >= $limits[0] && $age <= $limits[1]) {
+                    $ageRange = $range;
+                    break;
+                }
+            }
+            
+            if ($ageRange === null) {
+                continue;
+            }
+        
+            if (!isset($counts['information'][$typeRun])) {
+                $counts['information'][$typeRun] = [];
+            }
+            
+            if (!isset($counts['information'][$typeRun][$gender])) {
+                $counts['information'][$typeRun][$gender] = [];
+            }
+            
+            if (!isset($counts['information'][$typeRun][$gender][$ageRange])) {
+                $counts['information'][$typeRun][$gender][$ageRange] = 0;
+            }
+        
+            $counts['information'][$typeRun][$gender][$ageRange]++;
+        }
+        
+        return response()->json($counts, 200);
+    }
+
+
 
     public function countList(Request $request) {
 
