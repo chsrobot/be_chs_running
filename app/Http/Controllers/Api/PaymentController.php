@@ -43,6 +43,8 @@ class PaymentController extends Controller
     
             $orderpay = $this->getPayOrder($email);
             $myPay = Information::where("email", $email)->first();
+            $tel = $myPay->phonenumber;
+            $accname = $account->name;
     
             // Handle the case when $myPay is null
             if (!$myPay) {
@@ -71,6 +73,8 @@ class PaymentController extends Controller
             $total = $toMyPay + $otherPayTotal + $orderpay + $shipment;
     
             $response[] = [
+                'name'=>$accname,
+                'tel'=>$tel,
                 'email' => $email,
                 'myPay' => $toMyPay,
                 'otherPay' => $otherPayTotal,
