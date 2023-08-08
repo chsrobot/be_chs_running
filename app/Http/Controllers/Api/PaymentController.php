@@ -18,9 +18,11 @@ use Carbon\Carbon;
 class PaymentController extends Controller
 {
 
-    public function countList(Request $request){
+    public function countList(Request $request) {
 
-        $data = Information::all();
+        $informationData = Information::all();
+        $othersInformationData = OthersInformation::all(); // Assuming you have a model for OthersInformation
+        
         $ageRanges = [
             '0-18' => [0, 18],
             '19-39' => [19, 39],
@@ -30,7 +32,7 @@ class PaymentController extends Controller
         
         $counts = [];
         
-        foreach ($data as $entry) {
+        foreach ($informationData as $entry) {
             $typeRun = $entry->type_run;
             $gender = $entry->gender;
             $age = Carbon::parse($entry->birthdate)->age;
@@ -44,7 +46,7 @@ class PaymentController extends Controller
             }
             
             if ($ageRange === null) {
-                continue; 
+                continue;
             }
         
             if (!isset($counts[$typeRun])) {
@@ -61,9 +63,15 @@ class PaymentController extends Controller
         
             $counts[$typeRun][$gender][$ageRange]++;
         }
+        
+        foreach ($othersInformationData as $entry) {
+            // Similar counting logic for OthersInformation
 
+        }
+    
         return response()->json($counts, 200);
     }
+    
 
     public function runShellScriptWithArgs($email,$name)
     {
