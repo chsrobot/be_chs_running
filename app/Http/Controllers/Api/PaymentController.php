@@ -52,19 +52,19 @@ class PaymentController extends Controller
                 continue;
             }
         
-            if (!isset($counts['information'][$typeRun])) {
-                $counts['information'][$typeRun] = [];
+            if (!isset($counts[$typeRun])) {
+                $counts[$typeRun] = [];
             }
             
-            if (!isset($counts['information'][$typeRun][$gender])) {
-                $counts['information'][$typeRun][$gender] = [];
+            if (!isset($counts[$typeRun][$gender])) {
+                $counts[$typeRun][$gender] = [];
             }
             
-            if (!isset($counts['information'][$typeRun][$gender][$ageRange])) {
-                $counts['information'][$typeRun][$gender][$ageRange] = 0;
+            if (!isset($counts[$typeRun][$gender][$ageRange])) {
+                $counts[$typeRun][$gender][$ageRange] = 0;
             }
         
-            $counts['information'][$typeRun][$gender][$ageRange]++;
+            $counts[$typeRun][$gender][$ageRange]++;
         }
         
         foreach ($othersInformationCheckedData as $othersInformation) {
@@ -85,19 +85,19 @@ class PaymentController extends Controller
                 continue;
             }
         
-            if (!isset($counts['information'][$typeRun])) {
-                $counts['information'][$typeRun] = [];
+            if (!isset($counts[$typeRun])) {
+                $counts[$typeRun] = [];
             }
             
-            if (!isset($counts['information'][$typeRun][$gender])) {
-                $counts['information'][$typeRun][$gender] = [];
+            if (!isset($counts[$typeRun][$gender])) {
+                $counts[$typeRun][$gender] = [];
             }
             
-            if (!isset($counts['information'][$typeRun][$gender][$ageRange])) {
-                $counts['information'][$typeRun][$gender][$ageRange] = 0;
+            if (!isset($counts[$typeRun][$gender][$ageRange])) {
+                $counts[$typeRun][$gender][$ageRange] = 0;
             }
         
-            $counts['information'][$typeRun][$gender][$ageRange]++;
+            $counts[$typeRun][$gender][$ageRange]++;
         }
         
         return response()->json($counts, 200);
