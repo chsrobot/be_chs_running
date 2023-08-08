@@ -21,7 +21,6 @@ class PaymentController extends Controller
     public function countList(Request $request){
 
         $data = Information::all();
-
         $ageRanges = [
             '0-18' => [0, 18],
             '19-39' => [19, 39],
@@ -30,16 +29,6 @@ class PaymentController extends Controller
         ];
         
         $counts = [];
-        
-        foreach ($ageRanges as $range => $limits) {
-            foreach ($ageRanges as $range2 => $limits2) {
-                foreach ($data->pluck('type_run')->unique() as $typeRun) {
-                    foreach (['M', 'F'] as $gender) {
-                        $counts[$typeRun][$gender][$range][$range2] = 0;
-                    }
-                }
-            }
-        }
         
         foreach ($data as $entry) {
             $typeRun = $entry->type_run;
@@ -55,11 +44,24 @@ class PaymentController extends Controller
             }
             
             if ($ageRange === null) {
-                continue;
+                continue; 
             }
-
-            $counts[$typeRun][$gender][$ageRange][$ageRange]++;
+        
+            if (!isset($counts[$typeRun])) {
+                $counts[$typeRun] = [];
+            }
+            
+            if (!isset($counts[$typeRun][$gender])) {
+                $counts[$typeRun][$gender] = [];
+            }
+            
+            if (!isset($counts[$typeRun][$gender][$ageRange])) {
+                $counts[$typeRun][$gender][$ageRange] = 0;
+            }
+        
+            $counts[$typeRun][$gender][$ageRange]++;
         }
+
         return response()->json($counts, 200);
     }
 
