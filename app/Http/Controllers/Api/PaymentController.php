@@ -12,10 +12,56 @@ use App\Models\Order;
 use App\Models\ProductList;
 use App\Models\Information;
 use App\Models\OthersInformation;
+use Carbon\Carbon;
 
 
 class PaymentController extends Controller
 {
+
+    public function countList(Request $request){
+
+        $data = Information::all();
+
+        $ageRanges = [
+            '0-18' => [0, 18],
+            '19-39' => [19, 39],
+            '40-59' => [40, 59],
+            '60-100' => [60, 100],
+        ];
+        
+        $counts = [];
+        
+        foreach ($ageRanges as $range => $limits) {
+            foreach ($ageRanges as $range2 => $limits2) {
+                foreach ($data->pluck('type_run')->unique() as $typeRun) {
+                    foreach (['M', 'F'] as $gender) {
+                        $counts[$typeRun][$gender][$range][$range2] = 0;
+                    }
+                }
+            }
+        }
+        
+        foreach ($data as $entry) {
+            $typeRun = $entry->type_run;
+            $gender = $entry->gender;
+            $age = Carbon::parse($entry->birthdate)->age;
+            
+            $ageRange = null;
+            foreach ($ageRanges as $range => $limits) {
+                if ($age >= $limits[0] && $age <= $limits[1]) {
+                    $ageRange = $range;
+                    break;
+                }
+            }
+            
+            if ($ageRange === null) {
+                continue;
+            }
+
+            $counts[$typeRun][$gender][$ageRange][$ageRange]++;
+        }
+        return response()->json($counts, 200);
+    }
 
     public function runShellScriptWithArgs($email,$name)
     {
@@ -24,6 +70,7 @@ class PaymentController extends Controller
 
         shell_exec("/home/adminreg/runner_prod/be_chs_running/sendmail.sh $arg1 $arg2");
     }
+
 
     public function adminPayment(Request $request) {
         $accounts = Account::all();

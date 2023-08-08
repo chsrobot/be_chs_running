@@ -47,6 +47,8 @@ Route::group(['middleware' => 'token.validate'], function () {
 });
 
 Route::get('/products', [ProductController::class, 'index']);
+Route::get('/admingetcount', [PaymentController::class, 'countList']);
+
 Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 //Route::get('/payment', [PaymentController::class, 'index']);
 //Route::post('/payment', [PaymentController::class, 'store']);
