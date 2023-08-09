@@ -29,9 +29,11 @@ class PaymentController extends Controller
         $othersInformationCheckedData = OthersInformation::whereIn('email', $checkedEmails)->get();
         
         $ageRanges = [
-            '0-18' => [0, 18],
-            '19-39' => [19, 39],
-            '40-59' => [40, 59],
+            '0-19' => [0, 19],
+            '20-29' => [20, 29],
+            '30-39' => [30, 39],
+            '40-49' => [40, 49],
+            '50-59' => [50, 59],
             '60-100' => [60, 100],
         ];
         
@@ -111,9 +113,11 @@ class PaymentController extends Controller
         $othersInformationData = OthersInformation::all(); 
         
         $ageRanges = [
-            '0-18' => [0, 18],
-            '19-39' => [19, 39],
-            '40-59' => [40, 59],
+            '0-19' => [0, 19],
+            '20-29' => [20, 29],
+            '30-39' => [30, 39],
+            '40-49' => [40, 49],
+            '50-59' => [50, 59],
             '60-100' => [60, 100],
         ];
         
