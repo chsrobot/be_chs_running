@@ -190,7 +190,6 @@ class PaymentController extends Controller
     
         return response()->json($counts, 200);
     }
-    
 
     public function runShellScriptWithArgs($email,$name)
     {
@@ -202,7 +201,24 @@ class PaymentController extends Controller
 
 
     public function adminPayment(Request $request) {
-        $accounts = Account::all();
+        $perPage = $request->input('per_page', 10);
+        $page = $request->input('page', 1);
+        $status = $request->input('status'); // Get the status filter from the request
+        
+        $query = Account::query();
+        
+        if ($status) {
+            $query->join('payment_evidences', 'accounts.email', '=', 'payment_evidences.email_uploader')
+                  ->where('payment_evidences.status', $status);
+        }
+        
+        $totalCount = $query->count();
+        
+        $accounts = $query->select('accounts.email', 'accounts.name')
+                         ->skip(($page - 1) * $perPage)
+                         ->take($perPage)
+                         ->get();
+        
         $response = [];
     
         foreach ($accounts as $account) {
@@ -212,13 +228,13 @@ class PaymentController extends Controller
             error_log($email);
             
     
-            $paymentEvidence = Payment::where('email_uploader', $email)->first();
+            $paymentEvidence = Payment::select('picture_path','email_checker','status')->where('email_uploader', $email)->first();
             $evidence = $paymentEvidence->picture_path ?? null;
             $whocheck = $paymentEvidence->email_checker ?? null;
             $status = $paymentEvidence->status ?? null;
     
             $orderpay = $this->getPayOrder($email);
-            $myPay = Information::where("email", $email)->first();
+            $myPay = Information::select('phonenumber','type_run','shipment')->where("email", $email)->first();
             $tel = $myPay->phonenumber ?? null;
             $accname = $account->name ?? null;
     
@@ -233,7 +249,7 @@ class PaymentController extends Controller
                 $isShipment = $myPay->shipment ?? false;
             }
     
-            $otherPay = OthersInformation::where("email", $email)->get();
+            $otherPay = OthersInformation::select('type_run')->where("email", $email)->get();
     
             foreach ($otherPay as $friend) {
                 $otherPayTotal += $this->getPriceRun($friend->type_run ?? null);
@@ -273,8 +289,12 @@ class PaymentController extends Controller
                     return 4;
             }
         })->values()->all();
-    
-        return response()->json(['data' => $sortedResponse], 200);
+        
+        $totalPages = ceil($totalCount / $perPage);
+        return response()->json([
+            'data' => $sortedResponse,
+            'total_pages' => $totalPages, // Include total page count in the response
+        ], 200);
         //return response()->json(['data' => $response], 200);
     }
 
