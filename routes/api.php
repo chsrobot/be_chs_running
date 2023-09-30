@@ -48,6 +48,10 @@ Route::group(['middleware' => 'token.validate'], function () {
 
 Route::get('/bib', [PaymentController::class, 'bibnumber']);
 
+Route::get('/findbib', [InformationController::class, 'findbib']);
+
+
+
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/admingetcount', [PaymentController::class, 'countList']);
 Route::get('/admingetcountpaid', [PaymentController::class, 'countlistpaid']);

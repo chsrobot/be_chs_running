@@ -24,6 +24,57 @@ class InformationController extends Controller {
             return false;
         }
     }
+    // public function findbib(Request $request) {
+    //     $email = $request->email;
+    
+    //     // Fetch the information for the specified email from both tables
+    //     $info = Information::where('information.email', $email)
+    //     ->select('accounts.name', 'accounts.lastname', 'information.bibnumber')
+    //     ->join('accounts', 'information.email', '=', 'accounts.email')
+    //     ->first();
+    
+    //     $others = OthersInformation::where('email', $email)
+    //     ->select('name', 'lastname', 'bibnumber')
+    //     ->get();
+        
+    
+    //     return response()->json($info )
+    //         ->header('Content-Type', 'application/json')
+    //         ->header('Access-Control-Allow-Origin', '*')
+    //         ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+    // }
+    
+    public function findbib(Request $request) {
+        $email = $request->email;
+    
+        // Fetch the information for the specified email from both tables and sort by bibnumber
+        $info = Information::
+            select('accounts.email','accounts.name', 'accounts.lastname', 'information.bibnumber')
+            ->join('accounts', 'information.email', '=', 'accounts.email')
+            ->whereNotNull('information.bibnumber') // Filter by not null bibnumber
+            // ->orderBy('information.bibnumber') // Sort by bibnumber
+            ->get();
+    
+        $others = OthersInformation::
+            select('email','name', 'lastname', 'bibnumber')
+            ->whereNotNull('bibnumber') // Filter by not null bibnumber
+            // ->orderBy('bibnumber') // Sort by bibnumber
+            ->get();
+    
+        $othersinfo = $others->toArray(); // Convert to array
+        $infoinfo = $info->toArray(); // Convert to array
+    
+        $res = array_merge($infoinfo, $othersinfo);
+    
+        return response()->json($res)
+            ->header('Content-Type', 'application/json')
+            ->header('Access-Control-Allow-Origin', '*')
+            ->header('Access-Control-Allow-Headers', 'Origin, Content-Type');
+    }
+    
+       
+
+
 
     public function insertOrUpdateInformation( Request $request ) {
         try {

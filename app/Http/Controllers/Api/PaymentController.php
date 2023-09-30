@@ -480,6 +480,12 @@ class PaymentController extends Controller
 
         $toMyPay = $this->getPriceRun($myPay->type_run ?? null);
 
+        $myinfo = [
+            'name' => $myPay->name,
+            'lastname' => $myPay->lastname,
+            'bibnumber' => $myPay->bibnumber
+        ];
+
         foreach ($otherPay as $friend) {
             $otherPayTotal += $this->getPriceRun($friend->type_run ?? null);
         }
@@ -488,10 +494,12 @@ class PaymentController extends Controller
 
         $total = $toMyPay + $otherPayTotal + $orderpay + $shipment;
 
+        
        
     
 
         return response()->json([
+            'myinfo' => $myinfo,
             'mypay' => $toMyPay,
             'friendpay' => $otherPayTotal,
             'orderpay' => $orderpay,
@@ -499,7 +507,7 @@ class PaymentController extends Controller
             'totalpay' => $total,
             'status' =>  $status,
             'evidence' => $evidence
-        ], 500);
+        ], 200);
     }
     
     
