@@ -339,9 +339,10 @@ class PaymentController extends Controller
             $status = $paymentEvidence->status ?? null;
     
             $orderpay = $this->getPayOrder($email);
-            $myPay = Information::select('phonenumber','type_run','shipment')->where("email", $email)->first();
+            $myPay = Information::select('phonenumber','type_run','shipment','bibnumber')->where("email", $email)->first();
             $tel = $myPay->phonenumber ?? null;
             $accname = $account->name ?? null;
+            $mybib = $myPay->bibnumber ?? null;
 
             
     
@@ -380,6 +381,7 @@ class PaymentController extends Controller
                 'orderPay' => $orderpay,
                 'total' =>  $total,
                 'status' =>  $status,
+                'mybib' => $mybib,
                 'path' =>  $evidence,
                 'whocheck' => $whocheck
             ];
