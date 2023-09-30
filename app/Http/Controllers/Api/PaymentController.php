@@ -340,9 +340,10 @@ class PaymentController extends Controller
     
             $orderpay = $this->getPayOrder($email);
             $myPay = Information::select('phonenumber','type_run','shipment','bibnumber')->where("email", $email)->first();
+            error_log($myPay);
             $tel = $myPay->phonenumber ?? null;
             $accname = $account->name ?? null;
-
+            $mybib = $myPay->bibnumber ?? null;
             
 
             
@@ -360,8 +361,11 @@ class PaymentController extends Controller
     
             $otherPay = OthersInformation::select('type_run','bibnumber')->where("email", $email)->get();
     
+            $others_bib = [];
+
             foreach ($otherPay as $friend) {
                 $otherPayTotal += $this->getPriceRun($friend->type_run ?? null);
+                array_push($others_bib, $friend->bibnumber);
             }
     
             if ($isShipment == "true") {
@@ -371,7 +375,14 @@ class PaymentController extends Controller
                 $shipment += ($friendshipment * 10);
             }
 
-            $mybib = $myPay->bibnumber ?? null;
+            // if ($otherPay !== null) {
+            //     $others_bib = $otherPay->bibnumber ?? null;
+            // }
+            // else{
+            //     $others_bib = null;
+            // }
+
+            $mybib = array_merge([$mybib], $others_bib);
 
             $total = $toMyPay + $otherPayTotal + $orderpay + $shipment;
     
