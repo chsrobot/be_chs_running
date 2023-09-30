@@ -17,6 +17,111 @@ use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
+
+    function getAge($birthdate) {
+        $age = date_diff(date_create($birthdate), date_create())->y;
+
+        if ($age >= 0 && $age <= 19) {
+            return 19;
+        } elseif ($age > 60) {
+            return 60;
+        } else {
+            return intval($age / 10) * 10;
+        }
+    }
+
+    function formatType($input) {
+        if (is_numeric($input) && intval($input) == $input) {
+            return str_pad($input, 2, '0', STR_PAD_LEFT);
+        } else {
+            return $input;
+        }
+    }
+
+    function threedigit($number) {
+        if ($number < 10) {
+            return "00" . $number;
+        } elseif ($number < 100) {
+            return "0" . $number;
+        } else {
+            return $number;
+        }
+    }
+
+    public function bibnumber(Request $request){
+        $emails = Information::join('payment_evidences', 'information.email', '=', 'payment_evidences.email_uploader')
+        ->where('payment_evidences.status', 'checked')
+        ->whereNull('information.bibnumber')
+        ->orderBy('information.id')
+        ->take(40)  // Limit to the first 20 results
+        ->pluck('information.email');
+    
+    
+            // ->first();
+
+
+        foreach($emails as $email){
+            error_log($email);
+            $information = Information::where('email',$email)->whereNull('bibnumber')->get()->first();
+
+            if($information->type_run == "VIP"){
+                $expectbib = $this->formatType($information->type_run).$information->gender;
+                $expectbibfind = $expectbib."%";
+                $latest_bib = Information::where('bibnumber','like',$expectbibfind )->count();
+                $latest_bib2 = OthersInformation::where('bibnumber','like',$expectbibfind )->count();
+                $final_bib = $expectbib.$this->threedigit($latest_bib+ $latest_bib2 +1);
+
+                $information->bibnumber = $final_bib;
+                $information->save();
+
+                //return $final_bib;
+            }
+            else{
+
+            $expectbib = $information->gender . $this->getAge($information->birthdate) . "_" . $this->formatType($information->type_run) ."_". $information->size."_";
+            $expectbibfind = $expectbib."%";
+            $latest_bib = Information::where('bibnumber','like',$expectbibfind )->count();
+            $latest_bib2 = OthersInformation::where('bibnumber','like',$expectbibfind )->count();
+            
+            $final_bib = $expectbib.$this->threedigit($latest_bib+ $latest_bib2 +1);
+            $information->bibnumber = $final_bib;
+            $information->save();
+            }
+
+            $othersinformations = OthersInformation::where('email',$email)->whereNull('bibnumber')->get();
+            foreach($othersinformations as $othersinformation){
+                if($othersinformation->type_run == "VIP"){
+                    $expectbib = $this->formatType($othersinformation->type_run).$othersinformation->gender;
+                    $expectbibfind = $expectbib."%";
+                    $latest_bib = Information::where('bibnumber','like',$expectbibfind )->count();
+                    $latest_bib2 = OthersInformation::where('bibnumber','like',$expectbibfind )->count();
+                    $final_bib = $expectbib.$this->threedigit($latest_bib+ $latest_bib2 +1);
+    
+                    $othersinformation->bibnumber = $final_bib;
+                    $othersinformation->save();
+    
+                    //return $final_bib;
+                }
+    else{
+                $expectbib = $othersinformation->gender . $this->getAge($othersinformation->birthdate) . "_" . $this->formatType($othersinformation->type_run) ."_". $othersinformation->size."_";
+                $expectbibfind = $expectbib."%";
+                $latest_bib = Information::where('bibnumber','like',$expectbibfind )->count();
+                $latest_bib2 = OthersInformation::where('bibnumber','like',$expectbibfind )->count();
+                
+                $final_bib = $expectbib.$this->threedigit($latest_bib+ $latest_bib2 +1);
+                $othersinformation->bibnumber = $final_bib;
+                $othersinformation->save();
+    }
+            }
+            
+            //return $final_bib;
+        }
+        
+        return $emails;
+
+
+    }
+
     public function countListpaid(Request $request)
     {
         $counts = [];
@@ -237,6 +342,8 @@ class PaymentController extends Controller
             $myPay = Information::select('phonenumber','type_run','shipment')->where("email", $email)->first();
             $tel = $myPay->phonenumber ?? null;
             $accname = $account->name ?? null;
+
+            
     
             // Handle the case when $myPay is null
             if (!$myPay) {
