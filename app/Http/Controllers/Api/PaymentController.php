@@ -372,9 +372,6 @@ class PaymentController extends Controller
             }
 
             $mybib = $myPay->bibnumber ?? null;
-            $others_bib = $otherPay->bibnumber ?? null;
-
-            $mybib = array_merge([$mybib], $others_bib);
 
             $total = $toMyPay + $otherPayTotal + $orderpay + $shipment;
     
