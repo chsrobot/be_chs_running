@@ -304,6 +304,65 @@ class InformationController extends Controller {
         }
     }
 
+    public function shirtcount(){
+        $result = Information::select('size', 'type_run')
+        ->whereNotNull('bibnumber')
+            ->groupBy('size', 'type_run')
+            ->selectRaw('size, type_run, COUNT(*) as count')
+            ->orderBy('size')
+            ->orderBy('type_run')
+            ->get()
+            ->groupBy('size')
+            ->map(function ($group) {
+                return $group->pluck('count', 'type_run')->toArray();
+            });
+    
+        $desiredResult = [];
+        foreach ($result as $shirtSize => $countByDistance) {
+            $desiredResult[$shirtSize] = $countByDistance;
+        }
+    
+        $result2 = OthersInformation::select('size', 'type_run')
+        ->whereNotNull('bibnumber')
+            ->groupBy('size', 'type_run')
+            ->selectRaw('size, type_run, COUNT(*) as count')
+            ->orderBy('size')
+            ->orderBy('type_run')
+            ->get()
+            ->groupBy('size')
+            ->map(function ($group) {
+                return $group->pluck('count', 'type_run')->toArray();
+            });
+    
+        $desiredResult2 = [];
+        foreach ($result2 as $shirtSize => $countByDistance) {
+            $desiredResult2[$shirtSize] = $countByDistance;
+        }
+    
+        $data = ['Self' => $desiredResult, 'Others' => $desiredResult2];
+
+
+$sumResult = [];
+
+foreach ($data["Self"] as $size => $counts) {
+    $sumResult[$size] = [];
+
+    foreach ($counts as $typeRun => $count) {
+        $sumResult[$size][$typeRun] = $count + ($data["Others"][$size][$typeRun] ?? 0);
+    }
+}
+
+
+
+        return response()->json($sumResult, 200);
+
+
+        
+    }
+    
+
+
+
     public function index() {
         //
     }

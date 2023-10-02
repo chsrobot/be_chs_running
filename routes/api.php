@@ -49,6 +49,7 @@ Route::group(['middleware' => 'token.validate'], function () {
 Route::get('/bib', [PaymentController::class, 'bibnumber']);
 
 Route::get('/findbib', [InformationController::class, 'findbib']);
+Route::get('/shirtcount', [InformationController::class, 'shirtcount']);
 
 
 
